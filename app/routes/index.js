@@ -1,4 +1,5 @@
 module.exports = (app) => {
+  require('./documents-routes')(app)
   require('./pdf-routes')(app)
   require('./backup-routes')(app)
   require('./upload-routes')(app)

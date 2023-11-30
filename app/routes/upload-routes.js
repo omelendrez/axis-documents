@@ -8,11 +8,6 @@ module.exports = async (app) => {
 
   // Pictures
 
-  router.get(
-    `${process.env.PICTURE_ENDPOINT}/:fileName/exists`,
-    controller.pictureExists
-  )
-
   router.post(
     process.env.PICTURE_ENDPOINT,
     upload.single('file'),
@@ -20,11 +15,6 @@ module.exports = async (app) => {
   )
 
   // Learner Id Cards
-
-  router.get(
-    `${process.env.LEARNER_ID_ENDPOINT}/:fileName/exists`,
-    controller.learnerIdCardExists
-  )
 
   router.post(
     process.env.LEARNER_ID_ENDPOINT,
@@ -40,11 +30,6 @@ module.exports = async (app) => {
 
   // FOET
 
-  router.get(
-    `${process.env.FOET_ENDPOINT}/:fileName/exists`,
-    controller.previouseFOETExists
-  )
-
   router.post(
     process.env.FOET_ENDPOINT,
     upload.single('file'),
@@ -52,11 +37,6 @@ module.exports = async (app) => {
   )
 
   // Payments
-
-  router.get(
-    `${process.env.PAYMENT_ENDPOINT}/:fileName/exists`,
-    controller.paymentExists
-  )
 
   router.post(
     process.env.PAYMENT_ENDPOINT,

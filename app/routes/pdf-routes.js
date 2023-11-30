@@ -14,11 +14,6 @@ module.exports = async (app) => {
     controller.createCertificate
   )
 
-  router.get(
-    `${process.env.PDF_CERTIFICATE_ENDPOINT}/:fileName/exists`,
-    controller.certificateExists
-  )
-
   // Id Card
 
   router.post(

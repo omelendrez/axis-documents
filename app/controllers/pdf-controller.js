@@ -11,23 +11,13 @@ const {
   generateStandardCertificate,
   generateNimasaCertificate
 } = require('../middleware/certificate-middleware')
+
 const {
   generateStandardIdCard,
   generateOpitoIdCard
 } = require('../middleware/id-card-middleware')
+
 const { welcome } = require('../middleware/welcome-middleware')
-
-exports.certificateExists = async (req, res) => {
-  const file = `${process.env.PDF_CERTIFICATE_FOLDER}/${req.params.fileName}`
-
-  fs.access(file, fs.F_OK, (err) => {
-    if (err) {
-      return res.status(200).send({ exists: false })
-    }
-
-    res.status(200).send({ exists: true })
-  })
-}
 
 exports.idCardExists = async (req, res) => {
   const file = `${process.env.PDF_ID_CARD_FOLDER}/${req.params.fileName}`

@@ -3,18 +3,6 @@ const { log } = require('../helpers/log')
 const { getFileName } = require('../helpers/converters')
 const { upload } = require('../services/uploader')
 
-exports.pictureExists = async (req, res) => {
-  const file = `${process.env.PICTURE_FOLDER}/${req.params.fileName}`
-
-  fs.access(file, fs.F_OK, (err) => {
-    if (err) {
-      return res.status(200).send({ exists: false })
-    }
-
-    res.status(200).send({ exists: true })
-  })
-}
-
 exports.uploadPicture = async (req, res) => {
   try {
     const photo = await req.file
@@ -42,18 +30,6 @@ exports.uploadPicture = async (req, res) => {
   }
 }
 
-exports.learnerIdCardExists = async (req, res) => {
-  const file = `${process.env.LEARNER_ID_FOLDER}/${req.params.fileName}`
-
-  fs.access(file, fs.F_OK, (err) => {
-    if (err) {
-      return res.status(200).send({ exists: false })
-    }
-
-    res.status(200).send({ exists: true })
-  })
-}
-
 exports.uploadLearnerIdCard = async (req, res) => {
   try {
     const idCard = await req.file
@@ -68,17 +44,7 @@ exports.uploadLearnerIdCard = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.LEARNER_ID_FOLDER}/${fileName}`
 
-    const width = parseInt(process.env.LEARNER_ID_WIDTH, 10)
-    const height = parseInt(process.env.LEARNER_ID_HEIGHT, 10)
-
-    const rotate = {
-      angle: -90,
-      data: {
-        background: { r: 0, g: 0, b: 0, alpha: 0 }
-      }
-    }
-
-    upload(inputFile, outputFile, fileName, width, height, null, rotate)
+    upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
       .catch((err) => res.status(500).send(err))
   } catch (err) {
@@ -86,18 +52,6 @@ exports.uploadLearnerIdCard = async (req, res) => {
     log.error(err)
     res.status(500).send(err)
   }
-}
-
-exports.previouseFOETExists = async (req, res) => {
-  const file = `${process.env.FOET_FOLDER}/${req.params.fileName}`
-
-  fs.access(file, fs.F_OK, (err) => {
-    if (err) {
-      return res.status(200).send({ exists: false })
-    }
-
-    res.status(200).send({ exists: true })
-  })
 }
 
 exports.uploadPreviousFOET = async (req, res) => {
@@ -114,9 +68,7 @@ exports.uploadPreviousFOET = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.FOET_FOLDER}/${fileName}`
 
-    const height = parseInt(process.env.FOET_HEIGHT, 10)
-
-    upload(inputFile, outputFile, fileName, null, height, 'contain')
+    upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)
@@ -169,30 +121,14 @@ exports.uploadCertificate = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
-    fs.rename(inputFile, outputFile, () =>
-      res.send({
-        message: 'Document uploaded successfully',
-        inputFile,
-        outputFile
-      })
-    )
+    upload(inputFile, outputFile, fileName)
+      .then((info) => res.send(info))
+      .catch((err) => res.status(500).send(err))
   } catch (err) {
     console.log(err)
     log.error(err)
     res.status(500).send(err)
   }
-}
-
-exports.paymentExists = async (req, res) => {
-  const file = `${process.env.PAYMENT_FOLDER}/${req.params.fileName}`
-
-  fs.access(file, fs.F_OK, (err) => {
-    if (err) {
-      return res.status(200).send({ exists: false })
-    }
-
-    res.status(200).send({ exists: true })
-  })
 }
 
 exports.uploadPayment = async (req, res) => {
@@ -209,13 +145,9 @@ exports.uploadPayment = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.PAYMENT_FOLDER}/${fileName}`
 
-    fs.rename(inputFile, outputFile, () =>
-      res.send({
-        message: 'Document uploaded successfully',
-        inputFile,
-        outputFile
-      })
-    )
+    upload(inputFile, outputFile, fileName)
+      .then((info) => res.send(info))
+      .catch((err) => res.status(500).send(err))
   } catch (err) {
     console.log(err)
     log.error(err)
