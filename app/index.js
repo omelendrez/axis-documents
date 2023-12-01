@@ -22,10 +22,15 @@ app.use(
   })
 )
 
-// app.use(express.static('uploads'))
-// app.use(express.static('exports'))
-
 require('./routes')(app)
+
+app.get('/', (req, res) => {
+  res.send({ message: 'Welcome to axis-documents api 👌' })
+})
+
+app.get('*', (req, res) => {
+  res.status(400).send({ message: 'Nothing to here...✋' })
+})
 
 const PORT = process.env.PORT || 3010
 
