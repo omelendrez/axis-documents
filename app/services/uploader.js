@@ -86,8 +86,9 @@ const processImage = (
 const processPdf = (inputFile, outputFile, fileName) =>
   new Promise((resolve, reject) =>
     (async () => {
+      console.log(inputFile, outputFile)
       try {
-        sendToS3(inputFile, outputFile, fileName, 'application/pdf')
+        sendToS3(outputFile, outputFile, fileName, 'application/pdf')
 
         resolve(fileName)
       } catch (error) {

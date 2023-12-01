@@ -30,6 +30,16 @@ module.exports = async (app) => {
     controller.getCertificateExists
   )
 
+  router.get(
+    `${process.env.WELCOME_LETTER_ENDPOINT}/:fileName/exists`,
+    controller.getCertificateExists
+  )
+
+  router.get(
+    `${process.env.PDF_ID_CARD_ENDPOINT}/:fileName/exists`,
+    controller.getIdCardExists
+  )
+
   // Get
 
   router.get(`${process.env.PICTURE_ENDPOINT}/:fileName`, controller.getPicture)
@@ -46,6 +56,16 @@ module.exports = async (app) => {
   router.get(
     `${process.env.PDF_CERTIFICATE_ENDPOINT}/:fileName`,
     controller.getCertificate
+  )
+
+  router.get(
+    `${process.env.WELCOME_LETTER_ENDPOINT}/:fileName`,
+    controller.getWelcomeLetter
+  )
+
+  router.get(
+    `${process.env.PDF_ID_CARD_ENDPOINT}/:fileName`,
+    controller.getIdCard
   )
 
   app.use('/', router)

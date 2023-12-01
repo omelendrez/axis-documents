@@ -22,22 +22,12 @@ module.exports = async (app) => {
     controller.createIdCard
   )
 
-  router.get(
-    `${process.env.PDF_ID_CARD_ENDPOINT}/:fileName/exists`,
-    controller.idCardExists
-  )
-
   // Welcome Letter
 
   router.post(
     `${process.env.WELCOME_LETTER_ENDPOINT}/:id`,
     pdf.none(),
     controller.createWelcomeLetter
-  )
-
-  router.get(
-    `${process.env.WELCOME_LETTER_ENDPOINT}/:fileName/exists`,
-    controller.welcomeLetterExists
   )
 
   app.use('/', router)
