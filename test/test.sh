@@ -1,21 +1,26 @@
 #!/bin/bash
 
 cd /data
-mkdir exports
-cd exports
-mkdir certificates
-mkdir id-cards
-mkdir opito
-mkdir welcome-letter
-cd opito
-mkdir csv
-cd /data
-mkdir uploads
-cd uploads
-mkdir foets
-mkdir learner-ids
-mkdir pictures
+ls
 
-cd /data
+cd /bird-volume
+ls
 
-ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+# mkdir exports
+# cd exports
+# mkdir certificates
+# mkdir id-cards
+# mkdir opito
+# mkdir welcome-letter
+# cd opito
+# mkdir csv
+# cd /data
+# mkdir uploads
+# cd uploads
+# mkdir foets
+# mkdir learner-ids
+# mkdir pictures
+
+# cd /data
+
+# ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
