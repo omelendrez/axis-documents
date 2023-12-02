@@ -32,7 +32,7 @@ module.exports = async (app) => {
 
   router.get(
     `${process.env.WELCOME_LETTER_ENDPOINT}/:fileName/exists`,
-    controller.getCertificateExists
+    controller.getWelcomeLetterExists
   )
 
   router.get(

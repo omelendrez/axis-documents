@@ -1,3 +1,4 @@
+const path = require('path')
 const sharp = require('sharp')
 const { sendToS3 } = require('./s3-services')
 
@@ -11,27 +12,32 @@ exports.upload = (
   rotate
 ) =>
   new Promise((resolve, reject) => {
-    const fileExtension = inputFile.split('.').pop()
+    try {
+      const fileExtension = outputFile.split('.').pop()
 
-    switch (fileExtension) {
-      case 'jpg':
-        processImage(
-          inputFile,
-          outputFile,
-          fileName,
-          width,
-          height,
-          fit,
-          rotate
-        )
-          .then((res) => resolve(res))
-          .catch((error) => reject(error))
-        break
+      switch (fileExtension) {
+        case 'jpg':
+          processImage(
+            inputFile,
+            outputFile,
+            fileName,
+            width,
+            height,
+            fit,
+            rotate
+          )
+            .then((res) => resolve(res))
+            .catch((error) => reject(error))
+          break
 
-      case 'pdf':
-        processPdf(inputFile, outputFile)
-          .then((res) => resolve(res))
-          .catch((error) => reject(error))
+        case 'pdf':
+          processPdf(outputFile, fileName)
+            .then((res) => resolve(res))
+            .catch((error) => reject(error))
+      }
+    } catch (error) {
+      console.log(error)
+      reject(error)
     }
   })
 
@@ -47,6 +53,16 @@ const processImage = (
   new Promise((resolve, reject) =>
     (async () => {
       try {
+        console.log({
+          inputFile,
+          outputFile,
+          fileName,
+          width,
+          height,
+          fit,
+          rotate
+        })
+
         const fileOperation = await sharp(inputFile).withMetadata()
 
         sharp.cache(false)
@@ -73,7 +89,11 @@ const processImage = (
           fileOperation.rotate(rotate.angle, rotate.data)
         }
 
-        await sendToS3(fileOperation, outputFile, fileName)
+        await fileOperation.toFile(outputFile)
+
+        const fileDir = path.join(__dirname, '..', '..', outputFile)
+
+        await sendToS3(fileDir, outputFile, fileName, 'image/jpeg')
 
         resolve(fileName)
       } catch (error) {
@@ -83,12 +103,13 @@ const processImage = (
     })()
   )
 
-const processPdf = (inputFile, outputFile, fileName) =>
+const processPdf = (outputFile, fileName) =>
   new Promise((resolve, reject) =>
     (async () => {
-      console.log(inputFile, outputFile)
       try {
-        sendToS3(outputFile, outputFile, fileName, 'application/pdf')
+        const fileDir = path.join(__dirname, '..', '..', outputFile)
+        console.log({ fileDir, outputFile, fileName })
+        await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
 
         resolve(fileName)
       } catch (error) {

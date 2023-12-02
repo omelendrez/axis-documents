@@ -24,12 +24,8 @@ app.use(
 
 require('./routes')(app)
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Welcome to axis-documents api 👌' })
-})
-
 app.get('*', (req, res) => {
-  res.status(400).send({ message: 'Nothing to here...✋' })
+  res.send({ message: 'Welcome to axis-documents api 👌' })
 })
 
 const PORT = process.env.PORT || 3010

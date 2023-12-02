@@ -25,7 +25,8 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
-        const buffer = fs.readFileSync(inputFile)
+        const buffer = await fs.readFileSync(inputFile)
+
         const params = {
           Bucket: awsS3BucketName,
           Key: outputFile,
@@ -34,19 +35,6 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
           ContentDisposition: 'inline',
           ContentEncoding: 'base64'
         }
-
-        await s3.send(command)
-
-        await fs.unlinkSync(inputFile)
-
-        resolve({
-          message: 'File is uploaded.',
-          data: {
-            name: fileName,
-            mimetype,
-            size
-          }
-        })
 
         const command = new PutObjectCommand(params)
 

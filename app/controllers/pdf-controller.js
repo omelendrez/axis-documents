@@ -18,6 +18,7 @@ const {
 } = require('../middleware/id-card-middleware')
 
 const { welcome } = require('../middleware/welcome-middleware')
+const { upload } = require('../services/uploader')
 
 exports.createCertificate = async (req, res) => {
   try {
@@ -41,6 +42,13 @@ exports.createCertificate = async (req, res) => {
 
     const doc = await generateCertificate(req)
 
+    const fileName = doc.info.FileName
+
+    const outputFile = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
+
+    upload(null, outputFile, fileName)
+      .then((info) => res.send({ info, ...doc.info }))
+      .catch((err) => res.status(500).send(err))
     res.status(200).send({ ...doc.info })
   } catch (err) {
     console.log(err)
@@ -77,7 +85,13 @@ exports.createIdCard = async (req, res) => {
 
     const doc = await generateIdCard(req, res)
 
-    res.status(200).send({ ...doc.info })
+    const fileName = doc.info.FileName
+
+    const outputFile = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
+
+    upload(null, outputFile, fileName)
+      .then((info) => res.send({ info, ...doc.info }))
+      .catch((err) => res.status(500).send(err))
   } catch (err) {
     log.error(err)
     res.status(500).send(err)
@@ -88,10 +102,14 @@ exports.createWelcomeLetter = async (req, res) => {
   try {
     const doc = await welcome(req)
 
-    await res.status(200).send({ ...doc.info })
-  } catch (err) {
-    console.log(req.body)
+    const fileName = doc.info.FileName
 
+    const outputFile = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
+
+    upload(null, outputFile, fileName)
+      .then((info) => res.send({ info, ...doc.info }))
+      .catch((err) => res.status(500).send(err))
+  } catch (err) {
     log.error(err)
     res.status(500).send(err)
   }

@@ -29,6 +29,7 @@ const generateStandardCertificate = async (req) => {
   doc.info.Subject = `${badge} - ${courseName}`
   doc.info.Producer = 'Axis v2.0'
   doc.info.CreationDate = new Date()
+  doc.info.FileName = `${file}.pdf`
 
   await doc.pipe(fs.createWriteStream(fileName))
 
