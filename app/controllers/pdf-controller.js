@@ -88,10 +88,11 @@ exports.createIdCard = async (req, res) => {
     const fileName = doc.info.FileName
 
     const outputFile = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
-
-    upload(null, outputFile, fileName)
-      .then((info) => res.send({ info, ...doc.info }))
-      .catch((err) => res.status(500).send(err))
+    setTimeout(() => {
+      upload(null, outputFile, fileName)
+        .then((info) => res.send({ info, ...doc.info }))
+        .catch((err) => res.status(500).send(err))
+    }, 1000)
   } catch (err) {
     log.error(err)
     res.status(500).send(err)
@@ -102,13 +103,15 @@ exports.createWelcomeLetter = async (req, res) => {
   try {
     const doc = await welcome(req)
 
-    const fileName = doc.info.FileName
+    const fileName = await doc.info.FileName
 
     const outputFile = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
 
-    upload(null, outputFile, fileName)
-      .then((info) => res.send({ info, ...doc.info }))
-      .catch((err) => res.status(500).send(err))
+    setTimeout(() => {
+      upload(null, outputFile, fileName)
+        .then((info) => res.send({ info, ...doc.info }))
+        .catch((err) => res.status(500).send(err))
+    }, 1000)
   } catch (err) {
     log.error(err)
     res.status(500).send(err)

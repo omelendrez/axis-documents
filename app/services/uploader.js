@@ -108,7 +108,7 @@ const processPdf = (outputFile, fileName) =>
     (async () => {
       try {
         const fileDir = path.join(__dirname, '..', '..', outputFile)
-        console.log({ fileDir, outputFile, fileName })
+
         await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
 
         resolve(fileName)

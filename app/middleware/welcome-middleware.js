@@ -63,16 +63,12 @@ const welcome = (req) =>
 
       await doc.font('Helvetica-Bold')
 
-      console.log('table row 1')
-
       await drawTableRow(doc, col, row, [
         'S/N',
         'Name',
         'Training',
         'Available Date(s)'
       ])
-
-      console.log('table row 1')
 
       row += 32
 

@@ -36,11 +36,12 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
           ContentEncoding: 'base64'
         }
 
-        const command = new PutObjectCommand(params)
+        const command = await new PutObjectCommand(params)
 
         await s3.send(command)
 
         await fs.unlinkSync(inputFile)
+
         const { mimetype, size } = buffer
 
         resolve({
