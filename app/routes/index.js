@@ -6,4 +6,5 @@ module.exports = (app) => {
   require('./csv-routes')(app)
   require('./email-routes')(app)
   require('./template-routes')(app)
+  require('./test-routes')(app)
 }
