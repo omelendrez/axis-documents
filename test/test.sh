@@ -16,6 +16,6 @@ mkdir foets
 mkdir learner-ids
 mkdir pictures
 
-cd /
+cd /data
 
 ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
