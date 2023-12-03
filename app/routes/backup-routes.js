@@ -1,11 +1,12 @@
-const controller = require('../controllers/backup-controller')
+const controller = require('../controllers/database-controller')
+const middleware = require('../middleware/upload-middleware')
 
 module.exports = async (app) => {
   const router = require('express').Router()
 
-  router.get('/backup', controller.createBackup)
+  const upload = middleware.upload
 
-  router.get('/restore', controller.restoreBackup)
+  router.post('/database', upload.single('file'), controller.sendFile)
 
   app.use('/', router)
 }

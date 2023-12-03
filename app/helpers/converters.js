@@ -37,4 +37,28 @@ const urlToBuffer = (url) => {
     })
   })
 }
-module.exports = { documentNumber, toWord, getFileName, urlToBuffer }
+function getTodayYMD() {
+  const today = new Date()
+
+  const day = today.getDate().toString()
+  const month = (today.getMonth() + 1).toString()
+  const year = today.getFullYear().toString()
+
+  const paddedDay =
+    parseInt(day, 10) < 10 ? day.padStart(2, '0') : day.toString()
+
+  const paddedMonth =
+    parseInt(month, 10) < 10 ? month.padStart(2, '0') : month.toString()
+
+  const paddedYear = year.toString()
+
+  return `${paddedYear}-${paddedMonth}-${paddedDay}`
+}
+
+module.exports = {
+  documentNumber,
+  toWord,
+  getFileName,
+  urlToBuffer,
+  getTodayYMD
+}

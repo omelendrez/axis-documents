@@ -1,3 +1,4 @@
+const fs = require('fs')
 const path = require('path')
 const sharp = require('sharp')
 const { sendToS3 } = require('./s3-services')
@@ -17,7 +18,7 @@ exports.upload = (
 
       switch (fileExtension) {
         case 'jpg':
-          processImage(
+          processImageFile(
             inputFile,
             outputFile,
             fileName,
@@ -31,7 +32,13 @@ exports.upload = (
           break
 
         case 'pdf':
-          processPdf(outputFile, fileName)
+          processPdfFile(outputFile, fileName)
+            .then((res) => resolve(res))
+            .catch((error) => reject(error))
+          break
+
+        case 'sql':
+          processSqlFile(inputFile, outputFile, fileName)
             .then((res) => resolve(res))
             .catch((error) => reject(error))
       }
@@ -41,7 +48,7 @@ exports.upload = (
     }
   })
 
-const processImage = (
+const processImageFile = (
   inputFile,
   outputFile,
   fileName,
@@ -53,16 +60,6 @@ const processImage = (
   new Promise((resolve, reject) =>
     (async () => {
       try {
-        console.log({
-          inputFile,
-          outputFile,
-          fileName,
-          width,
-          height,
-          fit,
-          rotate
-        })
-
         const fileOperation = await sharp(inputFile).withMetadata()
 
         sharp.cache(false)
@@ -103,7 +100,7 @@ const processImage = (
     })()
   )
 
-const processPdf = (outputFile, fileName) =>
+const processPdfFile = (outputFile, fileName) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
@@ -112,6 +109,25 @@ const processPdf = (outputFile, fileName) =>
         await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
 
         resolve(fileName)
+      } catch (error) {
+        console.log(error)
+        reject(error)
+      }
+    })()
+  )
+
+const processSqlFile = (inputFile, outputFile, fileName) =>
+  new Promise((resolve, reject) =>
+    (async () => {
+      try {
+        if (fs.existsSync(inputFile)) {
+          await sendToS3(inputFile, outputFile, fileName, 'application/x-sql')
+
+          resolve(fileName)
+        } else {
+          console.log('not found', inputFile)
+          reject(`File not found ${inputFile}`)
+        }
       } catch (error) {
         console.log(error)
         reject(error)
