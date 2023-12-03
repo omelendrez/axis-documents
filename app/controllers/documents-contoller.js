@@ -6,7 +6,7 @@ exports.getPictureExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -20,7 +20,7 @@ exports.getPicture = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -36,7 +36,7 @@ exports.getLearnerIdExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -50,7 +50,7 @@ exports.getLearnerId = (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -64,7 +64,7 @@ exports.getPrevFoetExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -78,7 +78,7 @@ exports.getPrevFoet = (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -92,7 +92,7 @@ exports.getPaymentExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -106,7 +106,7 @@ exports.getPayment = (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -122,7 +122,7 @@ exports.getCertificateExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -136,7 +136,7 @@ exports.getCertificate = (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -152,7 +152,7 @@ exports.getWelcomeLetterExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -166,7 +166,7 @@ exports.getWelcomeLetter = (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -182,7 +182,7 @@ exports.getIdCardExists = async (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)
@@ -196,7 +196,7 @@ exports.getIdCard = (req, res) => {
     .then((data, err) => {
       if (err) {
         res.status(500).send({
-          message: 'Document not found' + req.params.fileName
+          message: 'Document not found ' + req.params.fileName
         })
       } else {
         res.send(data)

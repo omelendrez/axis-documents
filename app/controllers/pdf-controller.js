@@ -19,6 +19,10 @@ const {
 
 const { welcome } = require('../middleware/welcome-middleware')
 const { upload } = require('../services/uploader')
+const {
+  getDocumentExists,
+  getDocument
+} = require('../services/document-services')
 
 exports.createCertificate = async (req, res) => {
   try {
@@ -66,14 +70,6 @@ exports.createIdCard = async (req, res) => {
 
     let generateIdCard = null
 
-    const profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
-
-    if (!fs.existsSync(profilePicture)) {
-      return res.status(404).send({
-        message: 'Learner picture is required'
-      })
-    }
-
     switch (parseInt(cert_type, 10)) {
       case CERT_TYPE.STANDARD:
         generateIdCard = generateStandardIdCard
@@ -83,18 +79,48 @@ exports.createIdCard = async (req, res) => {
         break
     }
 
-    const doc = await generateIdCard(req, res)
+    let profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
 
-    const fileName = doc.info.FileName
+    getDocumentExists(profilePicture).then((data, err) => {
+      if (err) {
+        console.log(err)
+        return res.status(404).send({
+          message: 'Learner picture is required'
+        })
+      } else {
+        if (data.exists) {
+          getDocument(profilePicture).then(async (data, err) => {
+            if (err) {
+              console.log(err)
+              return res.status(404).send({
+                message: 'Learner picture is required'
+              })
+            } else {
+              try {
+                const doc = await generateIdCard(req, data)
 
-    const outputFile = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
-    setTimeout(() => {
-      upload(null, outputFile, fileName)
-        .then((info) => res.send({ info, ...doc.info }))
-        .catch((err) => res.status(500).send(err))
-    }, 1000)
+                const fileName = doc.info.FileName
+
+                const outputFile = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
+
+                setTimeout(() => {
+                  upload(null, outputFile, fileName)
+                    .then((info) => res.send({ info, ...doc.info }))
+                    .catch((err) => {
+                      console.log(err)
+                      res.status(500).send(err)
+                    })
+                }, 1000)
+              } catch (error) {
+                console.log(err)
+              }
+            }
+          })
+        }
+      }
+    })
   } catch (err) {
-    log.error(err)
+    console.log(err)
     res.status(500).send(err)
   }
 }
