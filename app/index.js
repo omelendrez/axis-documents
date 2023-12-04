@@ -24,6 +24,8 @@ app.use(
 
 require('./routes')(app)
 
+app.use(express.static('exports/opito/csv'))
+
 app.get('*', (req, res) => {
   res.send({ message: 'Welcome to axis-documents api 👌' })
 })
