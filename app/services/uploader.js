@@ -106,9 +106,13 @@ const processPdfFile = (outputFile, fileName) =>
       try {
         const fileDir = path.join(__dirname, '..', '..', outputFile)
 
-        await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
-
-        resolve(fileName)
+        if (fs.existsSync(fileDir)) {
+          await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
+          resolve(fileName)
+        } else {
+          console.log('not found', fileDir)
+          reject(`File not found ${fileDir}`)
+        }
       } catch (error) {
         console.log(error)
         reject(error)

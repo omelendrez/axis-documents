@@ -52,8 +52,10 @@ exports.createCertificate = async (req, res) => {
 
     upload(null, outputFile, fileName)
       .then((info) => res.send({ info, ...doc.info }))
-      .catch((err) => res.status(500).send(err))
-    res.status(200).send({ ...doc.info })
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.log(err)
     log.error(err)
@@ -136,7 +138,10 @@ exports.createWelcomeLetter = async (req, res) => {
     setTimeout(() => {
       upload(null, outputFile, fileName)
         .then((info) => res.send({ info, ...doc.info }))
-        .catch((err) => res.status(500).send(err))
+        .catch((err) => {
+          console.log(err)
+          res.status(500).send(err)
+        })
     }, 1000)
   } catch (err) {
     log.error(err)

@@ -22,7 +22,10 @@ exports.uploadPicture = async (req, res) => {
 
     upload(inputFile, outputFile, fileName, width, height)
       .then((info) => res.send(info))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.error(err)
     log.error(err)
@@ -46,7 +49,10 @@ exports.uploadLearnerIdCard = async (req, res) => {
 
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.error(err)
     log.error(err)
@@ -99,7 +105,10 @@ exports.uploadTemplate = async (req, res) => {
 
     upload(inputFile, outputFile, fileName, null, height, 'contain')
       .then((info) => res.send(info))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.error(err)
     log.error(err)
@@ -123,7 +132,10 @@ exports.uploadCertificate = async (req, res) => {
 
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.log(err)
     log.error(err)
@@ -147,7 +159,10 @@ exports.uploadPayment = async (req, res) => {
 
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
-      .catch((err) => res.status(500).send(err))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.log(err)
     log.error(err)
