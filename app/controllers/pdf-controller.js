@@ -1,7 +1,4 @@
 /* eslint-disable no-unused-vars */
-// Importing modules
-
-const fs = require('fs')
 
 const { log } = require('../helpers/log')
 
@@ -46,16 +43,18 @@ exports.createCertificate = async (req, res) => {
 
     const doc = await generateCertificate(req)
 
-    const fileName = doc.info.FileName
+    const fileName = await doc.info.FileName
 
     const outputFile = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
-    upload(null, outputFile, fileName)
-      .then((info) => res.send({ info, ...doc.info }))
-      .catch((err) => {
-        console.log(err)
-        res.status(500).send(err)
-      })
+    setTimeout(() => {
+      upload(null, outputFile, fileName)
+        .then((info) => res.send({ info, ...doc.info }))
+        .catch((err) => {
+          console.log(err)
+          res.status(500).send(err)
+        })
+    }, 1000)
   } catch (err) {
     console.log(err)
     log.error(err)
