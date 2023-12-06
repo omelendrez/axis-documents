@@ -45,11 +45,11 @@ exports.createCertificate = async (req, res) => {
 
     const fileName = await doc.info.FileName
 
-    const outputFile = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
+    const filePath = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
     await sleep(1000)
 
-    upload(null, outputFile, fileName)
+    upload(filePath, filePath, fileName)
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
         console.log(err)
@@ -102,11 +102,11 @@ exports.createIdCard = async (req, res) => {
 
                 const fileName = doc.info.FileName
 
-                const outputFile = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
+                const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
 
                 await sleep(1000)
 
-                upload(null, outputFile, fileName)
+                upload(filePath, filePath, fileName)
                   .then((info) => res.send({ info, ...doc.info }))
                   .catch((err) => {
                     console.log(err)
@@ -132,11 +132,11 @@ exports.createWelcomeLetter = async (req, res) => {
 
     const fileName = await doc.info.FileName
 
-    const outputFile = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
+    const filePath = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
 
     await sleep(1000)
 
-    upload(null, outputFile, fileName)
+    upload(filePath, filePath, fileName)
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
         console.log(err)
