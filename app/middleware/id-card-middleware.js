@@ -9,7 +9,7 @@ const cardWidth = 242
 const cardHeight = 153
 
 const generateStandardIdCard = async (req, profilePicture) =>
-  new Promise((resolve) =>
+  new Promise((resolve, reject) =>
     (async () => {
       try {
         const {
@@ -69,9 +69,13 @@ const generateStandardIdCard = async (req, profilePicture) =>
 
         await doc.text(certificate, { width: cardWidth, height: cardHeight })
 
-        // if (profilePicture && fs.existsSync(profilePicture)) {
-        await doc.image(profilePicture, 2, 94, { width: 76 })
-        // }
+        const buffer = await urlToBuffer(profilePicture)
+
+        fs.writeFileSync('./test.jpg', buffer, 'binary')
+
+        await doc.image('./test.jpg', 2, 94, { width: 76 })
+
+        fs.unlinkSync('./test.jpg')
 
         await doc.addPage()
 
@@ -136,6 +140,7 @@ const generateStandardIdCard = async (req, profilePicture) =>
 
         resolve(doc)
       } catch (error) {
+        reject(error)
         console.log(error)
       }
     })()
