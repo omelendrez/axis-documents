@@ -82,44 +82,50 @@ exports.createIdCard = async (req, res) => {
 
     let profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
 
-    getDocumentExists(profilePicture).then((data, err) => {
-      if (err) {
-        console.log(err)
-        return res.status(404).send({
-          message: 'Learner picture is required'
-        })
-      } else {
-        if (data.exists) {
-          getDocument(profilePicture).then(async (data, err) => {
-            if (err) {
-              console.log(err)
-              return res.status(404).send({
-                message: 'Learner picture is required'
-              })
-            } else {
-              try {
-                const doc = await generateIdCard(req, data)
-
-                const fileName = doc.info.FileName
-
-                const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
-
-                await sleep(1000)
-
-                upload(filePath, filePath, fileName)
-                  .then((info) => res.send({ info, ...doc.info }))
-                  .catch((err) => {
-                    console.log(err)
-                    res.status(500).send(err)
-                  })
-              } catch (error) {
-                console.log(err)
-              }
-            }
+    getDocumentExists(profilePicture)
+      .then((data, err) => {
+        if (err) {
+          console.log(err)
+          return res.status(404).send({
+            message: 'Learner picture is required'
           })
+        } else {
+          if (data.exists) {
+            getDocument(profilePicture).then(async (data, err) => {
+              if (err) {
+                console.log(err)
+                return res.status(404).send({
+                  message: 'Learner picture is required'
+                })
+              } else {
+                try {
+                  const doc = await generateIdCard(req, data)
+
+                  const fileName = doc.info.FileName
+
+                  const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
+
+                  await sleep(1000)
+
+                  upload(filePath, filePath, fileName)
+                    .then((info) => res.send({ info, ...doc.info }))
+                    .catch((err) => {
+                      console.log(err)
+                      res.status(500).send(err)
+                    })
+                } catch (err) {
+                  res.status(500).send(err)
+                  console.log(err)
+                }
+              }
+            })
+          }
         }
-      }
-    })
+      })
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.log(err)
     res.status(500).send(err)
