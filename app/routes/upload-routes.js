@@ -22,12 +22,6 @@ module.exports = async (app) => {
     controller.uploadLearnerIdCard
   )
 
-  router.post(
-    `${process.env.LEARNER_ID_ENDPOINT}/restore`,
-    upload.single('file'),
-    controller.uploadLearnerIdCardRestore
-  )
-
   // FOET
 
   router.post(
@@ -49,7 +43,7 @@ module.exports = async (app) => {
   router.post(
     `${process.env.OPITO_ENDPOINT}/upload`,
     upload.single('file'),
-    controller.uploadCertificate
+    controller.uploadOpitoCertificate
   )
 
   app.use('/', router)

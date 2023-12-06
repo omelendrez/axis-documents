@@ -1,6 +1,7 @@
 const { sendFile } = require('../services/database-service')
 const { log } = require('../helpers/log')
 const { getFileName } = require('../helpers/converters')
+const { sleep } = require('../helpers/constants')
 
 exports.sendFile = async (req, res) => {
   try {
@@ -13,6 +14,8 @@ exports.sendFile = async (req, res) => {
     }
 
     const fileName = getFileName(req.body.name, data)
+
+    await sleep(1000)
 
     const resp = await sendFile(fileName)
 
