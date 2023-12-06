@@ -32,7 +32,7 @@ exports.upload = (
           break
 
         case 'pdf':
-          processPdfFile(outputFile, fileName)
+          processPdfFile(inputFile, outputFile, fileName)
             .then((res) => resolve(res))
             .catch((error) => reject(error))
           break
@@ -100,11 +100,11 @@ const processImageFile = (
     })()
   )
 
-const processPdfFile = (outputFile, fileName) =>
+const processPdfFile = (inputFile, outputFile, fileName) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
-        const fileDir = path.join(__dirname, '..', '..', outputFile)
+        const fileDir = path.join(__dirname, '..', '..', inputFile)
 
         if (fs.existsSync(fileDir)) {
           await sendToS3(fileDir, outputFile, fileName, 'application/pdf')

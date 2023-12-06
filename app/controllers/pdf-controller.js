@@ -2,7 +2,7 @@
 
 const { log } = require('../helpers/log')
 
-const { CERT_TYPE } = require('../helpers/constants')
+const { CERT_TYPE, sleep } = require('../helpers/constants')
 
 const {
   generateStandardCertificate,
@@ -47,14 +47,14 @@ exports.createCertificate = async (req, res) => {
 
     const outputFile = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
-    setTimeout(() => {
-      upload(null, outputFile, fileName)
-        .then((info) => res.send({ info, ...doc.info }))
-        .catch((err) => {
-          console.log(err)
-          res.status(500).send(err)
-        })
-    }, 1000)
+    await sleep(1000)
+
+    upload(null, outputFile, fileName)
+      .then((info) => res.send({ info, ...doc.info }))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     console.log(err)
     log.error(err)
@@ -104,14 +104,14 @@ exports.createIdCard = async (req, res) => {
 
                 const outputFile = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
 
-                setTimeout(() => {
-                  upload(null, outputFile, fileName)
-                    .then((info) => res.send({ info, ...doc.info }))
-                    .catch((err) => {
-                      console.log(err)
-                      res.status(500).send(err)
-                    })
-                }, 1000)
+                await sleep(1000)
+
+                upload(null, outputFile, fileName)
+                  .then((info) => res.send({ info, ...doc.info }))
+                  .catch((err) => {
+                    console.log(err)
+                    res.status(500).send(err)
+                  })
               } catch (error) {
                 console.log(err)
               }
@@ -134,14 +134,14 @@ exports.createWelcomeLetter = async (req, res) => {
 
     const outputFile = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
 
-    setTimeout(() => {
-      upload(null, outputFile, fileName)
-        .then((info) => res.send({ info, ...doc.info }))
-        .catch((err) => {
-          console.log(err)
-          res.status(500).send(err)
-        })
-    }, 1000)
+    await sleep(1000)
+
+    upload(null, outputFile, fileName)
+      .then((info) => res.send({ info, ...doc.info }))
+      .catch((err) => {
+        console.log(err)
+        res.status(500).send(err)
+      })
   } catch (err) {
     log.error(err)
     res.status(500).send(err)

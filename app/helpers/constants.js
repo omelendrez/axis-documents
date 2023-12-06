@@ -10,4 +10,6 @@ const OPITO_HUB_URL =
 
 const ZIP_EXTENSION = 'gz'
 
-module.exports = { CERT_TYPE, OPITO_HUB_URL, ZIP_EXTENSION }
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
+module.exports = { CERT_TYPE, OPITO_HUB_URL, ZIP_EXTENSION, sleep }
