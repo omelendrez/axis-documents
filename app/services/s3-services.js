@@ -8,6 +8,8 @@ const {
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner')
 
+const { api } = require('./api-service')
+
 const awsS3BucketRegion = process.env.AWS_S3_BUCKET_REGION
 const awsS3BucketAccessKey = process.env.AWS_S3_BUCKET_ACCESS_KEY
 const awsS3BucketSecretAccessKey = process.env.AWS_S3_BUCKET_SECRET_ACCESS_KEY
@@ -69,6 +71,12 @@ const checkDocument = (file) =>
     const head = await new HeadObjectCommand(params)
 
     await s3.send(head)
+
+    const resp = await api.get(`s3-document/exists?file=${file}`)
+
+    if (!resp.exists) {
+      await api.post('s3-document', { file })
+    }
   })()
 
 const getDocumentUrl = (file) =>

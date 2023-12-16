@@ -34,6 +34,7 @@ const PORT = process.env.PORT || 3010
 
 app.listen(PORT, () => {
   log.info(`Server is running on port ${PORT}.`)
+  console.log(`Server is running on port ${PORT}.`)
 })
 
 const emailService = new EmailService()
