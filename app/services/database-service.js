@@ -1,12 +1,10 @@
 const path = require('path')
 const { upload } = require('./uploader')
-const { getTodayYMD } = require('../helpers/converters')
+const { api } = require('./api-service')
 
 const sendFile = (fileName) =>
   new Promise((resolve, reject) =>
     (async () => {
-      const today = getTodayYMD()
-
       const dirPath = path.join(
         __dirname,
         '..',
@@ -16,12 +14,15 @@ const sendFile = (fileName) =>
 
       const inputFile = `${dirPath}/${fileName}`
 
-      const outputFile = `database/${today}/${fileName}`
+      const outputFile = `database/${fileName}`
 
       resolve()
 
       upload(inputFile, outputFile, fileName)
-        .then((info) => resolve(info))
+        .then((info) => {
+          api.post('s3-document', { file: outputFile })
+          resolve(info)
+        })
         .catch((err) => reject(err))
     })()
   )
