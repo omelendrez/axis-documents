@@ -1,7 +1,7 @@
 const controller = require('../controllers/database-controller')
 const middleware = require('../middleware/upload-middleware')
 
-module.exports = async (app) => {
+module.exports = (app) => {
   const router = require('express').Router()
 
   const upload = middleware.upload

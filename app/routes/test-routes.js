@@ -1,6 +1,6 @@
 const controller = require('../controllers/test-controller')
 
-module.exports = async (app) => {
+module.exports = (app) => {
   const router = require('express').Router()
 
   router.get('/test', controller.runTest)

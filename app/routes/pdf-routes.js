@@ -1,7 +1,7 @@
 const controller = require('../controllers/pdf-controller')
 const middleware = require('../middleware/pdf-middleware')
 
-module.exports = async (app) => {
+module.exports = (app) => {
   const router = require('express').Router()
 
   const pdf = middleware.pdf

@@ -1,6 +1,6 @@
 const controller = require('../controllers/documents-contoller')
 
-module.exports = async (app) => {
+module.exports = (app) => {
   const router = require('express').Router()
 
   // Exists
