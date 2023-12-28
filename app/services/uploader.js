@@ -1,8 +1,20 @@
-const fs = require('fs')
-const path = require('path')
+const fs = require('node:fs')
+const path = require('node:path')
 const sharp = require('sharp')
 const { sendToS3 } = require('./s3-services')
 
+/**
+ *
+ * @param {string/sream} inputFile
+ * @param {string} outputFile
+ * @param {string} fileName
+ * @param {number} width
+ * @param {number} height
+ * @param {string} fit
+ * @param {{number, number}} rotate
+ * @param {boolean} isStream
+ * @returns Promise
+ */
 exports.upload = (
   inputFile,
   outputFile,
@@ -10,7 +22,8 @@ exports.upload = (
   width,
   height,
   fit,
-  rotate
+  rotate,
+  isStream
 ) =>
   new Promise((resolve, reject) => {
     try {
@@ -32,7 +45,7 @@ exports.upload = (
           break
 
         case 'pdf':
-          processPdfFile(inputFile, outputFile, fileName)
+          processPdfFile(inputFile, outputFile, fileName, isStream)
             .then((res) => resolve(res))
             .catch((error) => reject(error))
           break
@@ -43,7 +56,6 @@ exports.upload = (
             .catch((error) => reject(error))
       }
     } catch (error) {
-      console.log(error)
       reject(error)
     }
   })
@@ -94,27 +106,29 @@ const processImageFile = (
 
         resolve(fileName)
       } catch (error) {
-        console.log(error)
         reject(error)
       }
     })()
   )
 
-const processPdfFile = (inputFile, outputFile, fileName) =>
+const processPdfFile = (inputFile, outputFile, fileName, isStream) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
-        const fileDir = path.join(__dirname, '..', '..', inputFile)
-
-        if (fs.existsSync(fileDir)) {
-          await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
+        if (isStream) {
+          await sendToS3(inputFile, outputFile, fileName, 'application/pdf')
           resolve(fileName)
         } else {
-          console.log('not found', fileDir)
-          reject(`File not found ${fileDir}`)
+          const fileDir = path.join(__dirname, '..', '..', inputFile)
+
+          if (fs.existsSync(fileDir)) {
+            await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
+            resolve(fileName)
+          } else {
+            reject(`File not found ${fileDir}`)
+          }
         }
       } catch (error) {
-        console.log(error)
         reject(error)
       }
     })()
@@ -129,11 +143,9 @@ const processSqlFile = (inputFile, outputFile, fileName) =>
 
           resolve(fileName)
         } else {
-          console.log('not found', inputFile)
           reject(`File not found ${inputFile}`)
         }
       } catch (error) {
-        console.log(error)
         reject(error)
       }
     })()

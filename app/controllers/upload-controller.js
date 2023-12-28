@@ -22,7 +22,7 @@ exports.uploadPicture = async (req, res) => {
 
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName, width, height)
+    upload({ inputFile, outputFile, fileName, width, height })
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)
@@ -51,7 +51,7 @@ exports.uploadLearnerIdCard = async (req, res) => {
 
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload({ inputFile, outputFile, fileName })
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)
@@ -80,7 +80,7 @@ exports.uploadPreviousFOET = async (req, res) => {
 
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload({ inputFile, outputFile, fileName })
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)
@@ -111,7 +111,7 @@ exports.uploadTemplate = async (req, res) => {
 
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName, null, height, 'contain')
+    upload({ inputFile, outputFile, fileName, height, fit: 'contain' })
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)
@@ -140,7 +140,7 @@ exports.uploadOpitoCertificate = async (req, res) => {
 
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload({ inputFile, outputFile, fileName })
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)
@@ -169,7 +169,7 @@ exports.uploadPayment = async (req, res) => {
 
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload({ inputFile, outputFile, fileName })
       .then((info) => res.send(info))
       .catch((err) => {
         console.log(err)

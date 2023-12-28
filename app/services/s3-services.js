@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('node:fs')
 const {
   S3Client,
   GetObjectCommand,
@@ -27,8 +27,6 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
-        // const buffer = await fs.readFileSync(inputFile)
-
         fs.readFile(inputFile, async (err, data) => {
           if (err) {
             console.log(err)
@@ -48,7 +46,7 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
 
           await s3.send(command)
 
-          await fs.unlinkSync(inputFile)
+          fs.unlink(inputFile, () => {})
 
           const { mimetype, size } = data
 

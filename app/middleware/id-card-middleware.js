@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('node:fs')
 const PDFDocument = require('pdfkit')
 const bwipjs = require('bwip-js')
 
@@ -75,8 +75,6 @@ const generateStandardIdCard = async (req, profilePicture) =>
 
         await doc.image('./test.jpg', 2, 94, { width: 76 })
 
-        fs.unlinkSync('./test.jpg')
-
         await doc.addPage()
 
         await doc
@@ -137,6 +135,8 @@ const generateStandardIdCard = async (req, profilePicture) =>
         await doc.image(qr, 180, 90, { width: 60, height: 60 })
 
         await doc.end()
+
+        fs.unlink('./test.jpg', () => {})
 
         resolve(doc)
       } catch (error) {
@@ -218,8 +218,6 @@ const generateOpitoIdCard = (req, profilePicture) =>
 
         await doc.image('./test.jpg', 2, 94, { width: 76 })
 
-        fs.unlinkSync('./test.jpg')
-
         await doc.addPage()
 
         await doc
@@ -279,6 +277,8 @@ const generateOpitoIdCard = (req, profilePicture) =>
         await doc.image(qr, 190, 100)
 
         await doc.end()
+
+        fs.unlink('./test.jpg', () => {})
 
         resolve(doc)
       } catch (error) {
