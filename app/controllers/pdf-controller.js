@@ -51,7 +51,7 @@ exports.createCertificate = async (req, res) => {
 
     await sleep(1000)
 
-    upload({ doc, outputFile, fileName, isStream: true })
+    upload({ inputFile: doc, outputFile, fileName, isStream: true })
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
         console.log(err)
@@ -111,7 +111,12 @@ exports.createIdCard = async (req, res) => {
 
                   await sleep(1000)
 
-                  upload({ doc, outputFile, fileName, isStream: true })
+                  upload({
+                    inputFile: doc,
+                    outputFile,
+                    fileName,
+                    isStream: true
+                  })
                     .then((info) => res.send({ info, ...doc.info }))
                     .catch((err) => {
                       console.log(err)
@@ -148,7 +153,7 @@ exports.createWelcomeLetter = async (req, res) => {
 
     await sleep(1000)
 
-    upload({ doc, outputFile, fileName, isStream: true })
+    upload({ inputFile: doc, outputFile, fileName, isStream: true })
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
         console.log(err)
