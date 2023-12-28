@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('node:fs')
 const PDFDocument = require('pdfkit')
 
 const { documentNumber, toWord } = require('../helpers/converters')

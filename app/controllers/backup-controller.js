@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('node:fs')
 const { backup, restore } = require('../services/bash-runner.js')
 const { ZIP_EXTENSION } = require('../helpers/constants')
 

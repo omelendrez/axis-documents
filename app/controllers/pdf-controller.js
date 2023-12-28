@@ -47,9 +47,11 @@ exports.createCertificate = async (req, res) => {
 
     const filePath = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
+    const outputFile = filePath
+
     await sleep(1000)
 
-    upload(filePath, filePath, fileName)
+    upload({ inputFile: doc, outputFile, fileName, isStream: true })
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
         console.log(err)
@@ -105,9 +107,16 @@ exports.createIdCard = async (req, res) => {
 
                   const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
 
+                  const outputFile = filePath
+
                   await sleep(1000)
 
-                  upload(filePath, filePath, fileName)
+                  upload({
+                    inputFile: doc,
+                    outputFile,
+                    fileName,
+                    isStream: true
+                  })
                     .then((info) => res.send({ info, ...doc.info }))
                     .catch((err) => {
                       console.log(err)
@@ -140,9 +149,11 @@ exports.createWelcomeLetter = async (req, res) => {
 
     const filePath = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
 
+    const outputFile = filePath
+
     await sleep(1000)
 
-    upload(filePath, filePath, fileName)
+    upload({ inputFile: doc, outputFile, fileName, isStream: true })
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
         console.log(err)

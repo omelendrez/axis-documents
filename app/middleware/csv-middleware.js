@@ -1,4 +1,4 @@
-const { appendFileSync } = require('fs')
+const { appendFileSync } = require('node:fs')
 
 const HEADER =
   'Start Date, End Date, Centre Code, Product Code, Booking Ref No,,'
