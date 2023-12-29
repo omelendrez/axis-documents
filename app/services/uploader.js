@@ -22,12 +22,11 @@ exports.upload = (
   width,
   height,
   fit,
-  rotate,
-  isStream
+  rotate
 ) =>
   new Promise((resolve, reject) => {
     try {
-      const fileExtension = isStream ? 'pdf' : outputFile.split('.').pop()
+      const fileExtension = outputFile.split('.').pop()
 
       switch (fileExtension) {
         case 'jpg':
@@ -45,7 +44,7 @@ exports.upload = (
           break
 
         case 'pdf':
-          processPdfFile(inputFile, outputFile, fileName, isStream)
+          processPdfFile(inputFile, outputFile, fileName)
             .then((res) => resolve(res))
             .catch((error) => reject(error))
           break
@@ -111,22 +110,17 @@ const processImageFile = (
     })()
   )
 
-const processPdfFile = (inputFile, outputFile, fileName, isStream) =>
+const processPdfFile = (inputFile, outputFile, fileName) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
-        if (isStream) {
-          await sendToS3(inputFile, outputFile, fileName, 'application/pdf')
+        const fileDir = path.join(__dirname, '..', '..', inputFile)
+
+        if (fs.existsSync(fileDir)) {
+          await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
           resolve(fileName)
         } else {
-          const fileDir = path.join(__dirname, '..', '..', inputFile)
-
-          if (fs.existsSync(fileDir)) {
-            await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
-            resolve(fileName)
-          } else {
-            reject(`File not found ${fileDir}`)
-          }
+          reject(`File not found ${fileDir}`)
         }
       } catch (error) {
         reject(error)

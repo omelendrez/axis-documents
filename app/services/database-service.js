@@ -15,7 +15,7 @@ const sendFile = (fileName) =>
 
     const outputFile = `database/${fileName}`
 
-    upload({ inputFile, outputFile, fileName })
+    upload(inputFile, outputFile, fileName)
       .then((info) => {
         api.post('s3-document', { file: outputFile })
         resolve(info)
