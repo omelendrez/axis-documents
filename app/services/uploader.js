@@ -27,7 +27,7 @@ exports.upload = (
 ) =>
   new Promise((resolve, reject) => {
     try {
-      const fileExtension = outputFile.split('.').pop()
+      const fileExtension = isStream ? 'pdf' : outputFile.split('.').pop()
 
       switch (fileExtension) {
         case 'jpg':
