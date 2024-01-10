@@ -11,5 +11,11 @@ module.exports = async (app) => {
     controller.sendWelcomeLetter
   )
 
+  router.post(
+    `${process.env.EMAIL_ENDPOINT}/error-tracking`,
+    pdf.none(),
+    controller.sendError
+  )
+
   app.use('/', router)
 }

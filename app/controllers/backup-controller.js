@@ -1,12 +1,14 @@
 const fs = require('node:fs')
 const { backup, restore } = require('../services/bash-runner.js')
 const { ZIP_EXTENSION } = require('../helpers/constants')
+const { sendError } = require('../errors/error-monitoring.js')
 
 const createBackup = async (req, res) => {
   try {
     const response = await backup()
     res.status(200).json(response)
   } catch (error) {
+    sendError('backup.createBackup', error)
     res.status(500).send(error)
   }
 }
@@ -21,6 +23,7 @@ const restoreBackup = async (req, res) => {
       const response = await restore()
       res.status(200).json(response)
     } catch (error) {
+      sendError('backup.restoreBackup', error)
       res.status(500).send(error)
     }
   } else {

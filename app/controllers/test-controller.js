@@ -1,3 +1,4 @@
+const { sendError } = require('../errors/error-monitoring')
 const Test = require('../services/test-services')
 
 const runTest = async (req, res) => {
@@ -8,6 +9,7 @@ const runTest = async (req, res) => {
     const resp = await Test.run()
     res.status(200).send(resp)
   } catch (error) {
+    sendError('pdf.runTest', error)
     return res.status(500).send({
       message: error.message || 'Some error occurred when backing up data.'
     })

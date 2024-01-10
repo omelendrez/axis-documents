@@ -4,6 +4,38 @@ const path = require('node:path')
 const EmailService = require('../services/EmailService')
 const { log } = require('../helpers/log')
 const isValidEmail = require('../helpers/validations')
+const ErrorMonitoring = require('../errors/error-monitoring')
+
+exports.sendError = async (req, res) => {
+  try {
+    const emailService = new EmailService()
+
+    const { controller, error } = req.body
+
+    const body = `<p>Dear <b>Omar</b>,</p>
+    <p>The server has detected the following error:</b></p>
+    <p>Controller: <code>${controller}<code></p>
+    <p><code>${error}<code></p>
+    <br/><br/>
+    <p><b>From Document server</b></p>
+    `
+
+    const email = {
+      to: 'omar.melendrez@gmail.com',
+      bcc: process.env.SMTP_SERVER_BCC,
+      subject: 'Axis Backend server error found',
+      html: body
+    }
+
+    emailService.sendEmail(email)
+
+    res.status(200).send({ ...email, message: 'Email sent successfully!' })
+  } catch (error) {
+    console.log(error)
+    log.error(error)
+    res.status(500).send(error)
+  }
+}
 
 exports.sendWelcomeLetter = async (req, res) => {
   try {
@@ -55,6 +87,7 @@ exports.sendWelcomeLetter = async (req, res) => {
     emailService.sendEmail(email)
     res.status(200).send({ ...email, message: 'Email sent successfully!' })
   } catch (error) {
+    ErrorMonitoring.sendError('email.sendWelcomeLetter', error)
     console.log(error)
     log.error(error)
     res.status(500).send(error)
