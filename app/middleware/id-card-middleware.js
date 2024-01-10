@@ -71,7 +71,7 @@ const generateStandardIdCard = (req, profilePicture) =>
 
         doc.text(certificate, { width: cardWidth, height: cardHeight })
 
-        const buffer = urlToBuffer(profilePicture)
+        const buffer = await urlToBuffer(profilePicture)
 
         fs.writeFileSync('./test.jpg', buffer, 'binary')
 
