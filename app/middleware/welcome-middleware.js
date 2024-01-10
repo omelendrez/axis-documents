@@ -4,236 +4,238 @@ const PDFDocument = require('pdfkit')
 const { documentNumber, toWord } = require('../helpers/converters')
 
 const welcome = (req) =>
-  new Promise((resolve) => {
-    const { badge, full_name, start, user, course } = req.body
+  new Promise((resolve, reject) => {
+    try {
+      const { badge, full_name, start, user, course } = req.body
 
-    const { name: courseName, id_card, validity } = course
+      const { name: courseName, id_card, validity } = course
 
-    const certificateValidity = parseInt(validity, 10)
+      const certificateValidity = parseInt(validity, 10)
 
-    const id = req.params.id
-    const file = documentNumber(id)
+      const id = req.params.id
+      const file = documentNumber(id)
 
-    const fileName = `${process.env.WELCOME_LETTER_FOLDER}/${file}.pdf`
+      const fileName = `${process.env.WELCOME_LETTER_FOLDER}/${file}.pdf`
 
-    const doc = new PDFDocument({
-      size: 'A4',
-      font: 'Helvetica'
-    })
+      const doc = new PDFDocument({
+        size: 'A4',
+        font: 'Helvetica'
+      })
 
-    doc.info.Title = 'Welcome Letter'
-    doc.info.Author = user.full_name
-    doc.info.Subject = `${badge} - ${courseName}`
-    doc.info.Producer = 'Axis v2.0'
-    doc.info.CreationDate = new Date()
-    doc.info.FileName = `${file}.pdf`
+      doc.info.Title = 'Welcome Letter'
+      doc.info.Author = user.full_name
+      doc.info.Subject = `${badge} - ${courseName}`
+      doc.info.Producer = 'Axis v2.0'
+      doc.info.CreationDate = new Date()
+      doc.info.FileName = `${file}.pdf`
 
-    const writeStream = fs.createWriteStream(fileName)
+      const writeStream = fs.createWriteStream(fileName)
 
-    doc.pipe(writeStream)
+      doc.pipe(writeStream)
 
-    doc.fontSize(9)
+      doc.fontSize(9)
 
-    const col = 48
-    let row = 48
+      const col = 48
+      let row = 48
 
-    const textWidth = 595 - col * 2
+      const textWidth = 595 - col * 2
 
-    writeHeader(doc, col, row, textWidth)
+      writeHeader(doc, col, row, textWidth)
 
-    row = 176
+      row = 176
 
-    doc.text('Dear Sir/Madam,', col, row, {
-      align: 'left',
-      width: textWidth
-    })
-
-    row += 32
-
-    doc.text(
-      `Thank you for registering the under-listed personnel for the ${courseName} Course at Tolmann Allied Services Company Limited:`,
-      col,
-      row,
-      {
-        align: 'justify',
+      doc.text('Dear Sir/Madam,', col, row, {
+        align: 'left',
         width: textWidth
-      }
-    )
-
-    row += 32
-
-    doc.font('Helvetica-Bold')
-
-    drawTableRow(doc, col, row, [
-      'S/N',
-      'Name',
-      'Training',
-      'Available Date(s)'
-    ])
-
-    row += 32
-
-    doc.font('Helvetica')
-
-    drawTableRow(doc, col, row, [1, full_name, courseName, start])
-
-    row += 48
-
-    doc
-      .font('Helvetica-Bold')
-      .text('Getting to Tolmann Allied Services Company Limited', col, row, {
-        underline: true
       })
 
-    doc
-      .font('Helvetica')
-      .text(
-        'The Training Facility is located right at the heart of Trans Amadi Industrial Layout, at Plot 7b, Mother cat Junction (a well-known bus stop), adjacent to Schlumberger, along Total Road.',
+      row += 32
+
+      doc.text(
+        `Thank you for registering the under-listed personnel for the ${courseName} Course at Tolmann Allied Services Company Limited:`,
         col,
-        doc.y,
-        { align: 'justify', width: textWidth }
-      )
-
-    doc.font('Helvetica-Bold').text('Accommodation', col, doc.y + 10, {
-      underline: true
-    })
-
-    doc
-      .font('Helvetica')
-      .text(
-        'Accommodation is available at Greenwood Court Hotel, which is located within the same premises as the Training Facility (at the right hand side as you enter from the gate). Kindly liaise with your Logistics department if reservation would be required, the hassle of traffic jams is completely eradicated if you avail yourself of this opportunity.  Our booking team will be happy to assist - 08096382000, 08096482000. \n Check out time is on or before 12:00 hours on the date/day of your departure.  Should you require luggage storage, the reception desk at the Hotel will be of assistance. ',
-        col,
-        doc.y,
-        { align: 'justify', width: textWidth }
-      )
-
-    doc
-      .font('Helvetica-Bold')
-      .text('TRAINING REGISTRATION & SESSIONS', col, doc.y + 10)
-
-    doc.text(
-      'Registration commences at 8 am, therefore you should be at the training venue on or before this time.',
-      col,
-      doc.y + 10,
-      { align: 'justify', width: textWidth, continued: true }
-    )
-
-    doc
-      .font('Helvetica')
-      .text(
-        'The course is a mix of theory and practical sessions; you will be assessed based on your understanding of the class session and your participation during the practical.',
-        doc.x,
-        doc.y,
-        { align: 'justify', width: textWidth }
-      )
-
-    doc
-      .font('Helvetica-Bold')
-      .text('Training starts at exactly 8am prompt.', col, doc.y + 10, {
-        underline: true
-      })
-
-    doc.text(
-      'IMPORTANT:  Kindly come with a valid means of identification i.e. Driver’s license/Voters card/International Passport/National ID card.',
-      col,
-      doc.y + 10,
-      {
-        underline: true
-      }
-    )
-    doc
-      .font('Helvetica')
-      .text(
-        'Tea/Coffee breaks and lunch will be served in the canteen during the training.',
-        doc.x,
-        doc.y + 10,
-        { align: 'justify', width: textWidth }
-      )
-
-    doc.addPage()
-
-    row = 48
-
-    writeHeader(doc, col, row, textWidth)
-
-    row = 176
-
-    doc
-      .text(
-        'Useful Telephone Numbers before/during the training are:  08099901280 (Dorathy) and 08099901281(Mercy).  You can also email ',
-        doc.x,
         row,
+        {
+          align: 'justify',
+          width: textWidth
+        }
+      )
+
+      row += 32
+
+      doc.font('Helvetica-Bold')
+
+      drawTableRow(doc, col, row, [
+        'S/N',
+        'Name',
+        'Training',
+        'Available Date(s)'
+      ])
+
+      row += 32
+
+      doc.font('Helvetica')
+
+      drawTableRow(doc, col, row, [1, full_name, courseName, start])
+
+      row += 48
+
+      doc
+        .font('Helvetica-Bold')
+        .text('Getting to Tolmann Allied Services Company Limited', col, row, {
+          underline: true
+        })
+
+      doc
+        .font('Helvetica')
+        .text(
+          'The Training Facility is located right at the heart of Trans Amadi Industrial Layout, at Plot 7b, Mother cat Junction (a well-known bus stop), adjacent to Schlumberger, along Total Road.',
+          col,
+          doc.y,
+          { align: 'justify', width: textWidth }
+        )
+
+      doc.font('Helvetica-Bold').text('Accommodation', col, doc.y + 10, {
+        underline: true
+      })
+
+      doc
+        .font('Helvetica')
+        .text(
+          'Accommodation is available at Greenwood Court Hotel, which is located within the same premises as the Training Facility (at the right hand side as you enter from the gate). Kindly liaise with your Logistics department if reservation would be required, the hassle of traffic jams is completely eradicated if you avail yourself of this opportunity.  Our booking team will be happy to assist - 08096382000, 08096482000. \n Check out time is on or before 12:00 hours on the date/day of your departure.  Should you require luggage storage, the reception desk at the Hotel will be of assistance. ',
+          col,
+          doc.y,
+          { align: 'justify', width: textWidth }
+        )
+
+      doc
+        .font('Helvetica-Bold')
+        .text('TRAINING REGISTRATION & SESSIONS', col, doc.y + 10)
+
+      doc.text(
+        'Registration commences at 8 am, therefore you should be at the training venue on or before this time.',
+        col,
+        doc.y + 10,
         { align: 'justify', width: textWidth, continued: true }
       )
-      .fillColor('#0288d1')
-      .text('admin@tolmann.com', {
-        continued: true,
-        link: 'mailto:admin@tolmann.com',
-        underline: true
-      })
-      .fillColor('#000')
-      .text(' and ', { continued: true, underline: false, link: null })
-      .fillColor('#0288d1')
-      .text('training@tolmann.com', {
-        link: 'mailto:training@tolmann.com',
-        underline: true
-      })
 
-    doc
-      .fillColor('#000')
-      .text(
-        'For further details, please contact the phone numbers/email addresses stated above.',
+      doc
+        .font('Helvetica')
+        .text(
+          'The course is a mix of theory and practical sessions; you will be assessed based on your understanding of the class session and your participation during the practical.',
+          doc.x,
+          doc.y,
+          { align: 'justify', width: textWidth }
+        )
+
+      doc
+        .font('Helvetica-Bold')
+        .text('Training starts at exactly 8am prompt.', col, doc.y + 10, {
+          underline: true
+        })
+
+      doc.text(
+        'IMPORTANT:  Kindly come with a valid means of identification i.e. Driver’s license/Voters card/International Passport/National ID card.',
+        col,
+        doc.y + 10,
+        {
+          underline: true
+        }
+      )
+      doc
+        .font('Helvetica')
+        .text(
+          'Tea/Coffee breaks and lunch will be served in the canteen during the training.',
+          doc.x,
+          doc.y + 10,
+          { align: 'justify', width: textWidth }
+        )
+
+      doc.addPage()
+
+      row = 48
+
+      writeHeader(doc, col, row, textWidth)
+
+      row = 176
+
+      doc
+        .text(
+          'Useful Telephone Numbers before/during the training are:  08099901280 (Dorathy) and 08099901281(Mercy).  You can also email ',
+          doc.x,
+          row,
+          { align: 'justify', width: textWidth, continued: true }
+        )
+        .fillColor('#0288d1')
+        .text('admin@tolmann.com', {
+          continued: true,
+          link: 'mailto:admin@tolmann.com',
+          underline: true
+        })
+        .fillColor('#000')
+        .text(' and ', { continued: true, underline: false, link: null })
+        .fillColor('#0288d1')
+        .text('training@tolmann.com', {
+          link: 'mailto:training@tolmann.com',
+          underline: true
+        })
+
+      doc
+        .fillColor('#000')
+        .text(
+          'For further details, please contact the phone numbers/email addresses stated above.',
+          doc.x,
+          doc.y + 10,
+          { align: 'justify', width: textWidth }
+        )
+
+      doc
+        .font('Helvetica-Bold')
+        .text('After Your Training: ', doc.x, doc.y + 10, {
+          align: 'justify',
+          width: textWidth,
+          continued: true
+        })
+        .font('Helvetica')
+        .text('You shall receive a certificate ', { continued: true })
+
+      if (parseInt(id_card, 10) > 0) {
+        doc.text('and ID card ', { continued: true })
+      }
+
+      if (certificateValidity > 0) {
+        const word = toWord(certificateValidity)
+        doc.text(`valid for ${word} (${certificateValidity}) years`, {
+          continued: true
+        })
+      }
+
+      doc.text('.')
+
+      doc.text(
+        'Should you find that you have misplaced any of your belongings when you arrive home, please contact your training coordinator (training@tolmann.com); if the item has been found, the school will contact you to arrange for its return/pick-up.',
         doc.x,
         doc.y + 10,
         { align: 'justify', width: textWidth }
       )
 
-    doc
-      .font('Helvetica-Bold')
-      .text('After Your Training: ', doc.x, doc.y + 10, {
-        align: 'justify',
-        width: textWidth,
-        continued: true
-      })
-      .font('Helvetica')
-      .text('You shall receive a certificate ', { continued: true })
+      doc.text(
+        'Thank you very much, we wish you a pleasant stay and a rewarding course.',
+        doc.x,
+        doc.y + 10,
+        { align: 'justify', width: textWidth }
+      )
 
-    if (parseInt(id_card, 10) > 0) {
-      doc.text('and ID card ', { continued: true })
+      doc.text('Management.', doc.x, doc.y + 30)
+
+      doc.text('Tolmann Allied Services Company Ltd', { oblique: true })
+
+      doc.end()
+
+      writeStream.on('finish', () => resolve(doc))
+    } catch (error) {
+      reject(error)
     }
-
-    if (certificateValidity > 0) {
-      const word = toWord(certificateValidity)
-      doc.text(`valid for ${word} (${certificateValidity}) years`, {
-        continued: true
-      })
-    }
-
-    doc.text('.')
-
-    doc.text(
-      'Should you find that you have misplaced any of your belongings when you arrive home, please contact your training coordinator (training@tolmann.com); if the item has been found, the school will contact you to arrange for its return/pick-up.',
-      doc.x,
-      doc.y + 10,
-      { align: 'justify', width: textWidth }
-    )
-
-    doc.text(
-      'Thank you very much, we wish you a pleasant stay and a rewarding course.',
-      doc.x,
-      doc.y + 10,
-      { align: 'justify', width: textWidth }
-    )
-
-    doc.text('Management.', doc.x, doc.y + 30)
-
-    doc.text('Tolmann Allied Services Company Ltd', { oblique: true })
-
-    doc.end()
-
-    writeStream.on('finish', function () {
-      resolve(doc)
-    })
   })
 
 const writeHeader = (doc, col, row, textWidth) => {
@@ -273,7 +275,7 @@ const writeHeader = (doc, col, row, textWidth) => {
   })
 }
 
-const drawTableRow = async (doc, col, row, cols) => {
+const drawTableRow = (doc, col, row, cols) => {
   let left = col
 
   let top = row

@@ -80,12 +80,11 @@ exports.createIdCard = async (req, res) => {
         break
     }
 
-    let profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
+    const profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
 
     getDocumentExists(profilePicture)
       .then((data, err) => {
         if (err) {
-          console.log(err)
           return res.status(404).send({
             message: 'Learner picture is required'
           })
@@ -119,6 +118,8 @@ exports.createIdCard = async (req, res) => {
                 }
               }
             })
+          } else {
+            res.status(400).send({ message: 'Leaner picture is required' })
           }
         }
       })

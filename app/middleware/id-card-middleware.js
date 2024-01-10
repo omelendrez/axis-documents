@@ -8,7 +8,7 @@ const { OPITO_HUB_URL } = require('../helpers/constants')
 const cardWidth = 242
 const cardHeight = 153
 
-const generateStandardIdCard = async (req, profilePicture) =>
+const generateStandardIdCard = (req, profilePicture) =>
   new Promise((resolve, reject) =>
     (async () => {
       try {
@@ -32,7 +32,7 @@ const generateStandardIdCard = async (req, profilePicture) =>
 
         const fileName = `${process.env.PDF_ID_CARD_FOLDER}/${file}.pdf`
 
-        const doc = await new PDFDocument({
+        const doc = new PDFDocument({
           size: [cardWidth, cardHeight],
           font: 'Helvetica'
         })
@@ -44,40 +44,42 @@ const generateStandardIdCard = async (req, profilePicture) =>
         doc.info.CreationDate = new Date()
         doc.info.FileName = `${file}.pdf`
 
-        await doc.pipe(fs.createWriteStream(fileName))
+        const writeStream = fs.createWriteStream(fileName)
 
-        await doc.image(backgroundImage, 0, 0, {
+        doc.pipe(writeStream)
+
+        doc.image(backgroundImage, 0, 0, {
           width: cardWidth,
           height: cardHeight
         })
 
-        await doc
+        doc
           .font('Helvetica-Bold')
           .fontSize(10)
           .fillColor('yellow')
           .text(front_id_text, 175, 32)
 
-        await doc
+        doc
           .fontSize(8)
           .fillColor('white')
           .text(full_name, 85, 110, { width: cardWidth, height: cardHeight })
           .moveDown(0.5)
 
-        await doc
+        doc
           .text(`EXP: ${expiry}`, { width: cardWidth, height: cardHeight })
           .moveDown(0.5)
 
-        await doc.text(certificate, { width: cardWidth, height: cardHeight })
+        doc.text(certificate, { width: cardWidth, height: cardHeight })
 
-        const buffer = await urlToBuffer(profilePicture)
+        const buffer = urlToBuffer(profilePicture)
 
         fs.writeFileSync('./test.jpg', buffer, 'binary')
 
-        await doc.image('./test.jpg', 2, 94, { width: 76 })
+        doc.image('./test.jpg', 2, 94, { width: 76 })
 
-        await doc.addPage()
+        doc.addPage()
 
-        await doc
+        doc
           .font('Helvetica')
           .fillColor('black')
           .fontSize(7)
@@ -88,15 +90,15 @@ const generateStandardIdCard = async (req, profilePicture) =>
             { width: cardWidth }
           )
 
-        await doc.text('appear overleaf has undergone ', {
+        doc.text('appear overleaf has undergone ', {
           width: cardWidth,
           height: cardHeight,
           continued: true
         })
 
-        await doc.font('Helvetica-Bold').text(`${back_id_text}.`).moveDown(0.5)
+        doc.font('Helvetica-Bold').text(`${back_id_text}.`).moveDown(0.5)
 
-        await doc
+        doc
           .font('Helvetica')
           .text('This card remains the property of TOLMANN.', {
             width: cardWidth,
@@ -104,7 +106,7 @@ const generateStandardIdCard = async (req, profilePicture) =>
           })
           .moveDown(0.5)
 
-        await doc
+        doc
           .text(
             'If found, please return to 7B Trans Amadi Industrial Layout, Port Harcourt.',
             { width: 180, height: cardHeight, continued: true }
@@ -114,7 +116,7 @@ const generateStandardIdCard = async (req, profilePicture) =>
             height: cardHeight
           })
 
-        await doc
+        doc
           .text('Signature:', 10, 140, {
             width: cardWidth,
             height: cardHeight
@@ -132,22 +134,21 @@ const generateStandardIdCard = async (req, profilePicture) =>
           textxalign: 'center' // Always good to set this
         })
 
-        await doc.image(qr, 180, 90, { width: 60, height: 60 })
+        doc.image(qr, 180, 90, { width: 60, height: 60 })
 
-        await doc.end()
+        doc.end()
 
         fs.unlink('./test.jpg', () => {})
 
-        resolve(doc)
+        writeStream.on('finish', () => resolve(doc))
       } catch (error) {
         reject(error)
-        console.log(error)
       }
     })()
   )
 
 const generateOpitoIdCard = (req, profilePicture) =>
-  new Promise((resolve) =>
+  new Promise((resolve, reject) =>
     (async () => {
       try {
         const {
@@ -173,7 +174,7 @@ const generateOpitoIdCard = (req, profilePicture) =>
 
         const fileName = `${process.env.PDF_ID_CARD_FOLDER}/${file}.pdf`
 
-        const doc = await new PDFDocument({
+        const doc = new PDFDocument({
           size: [cardWidth, cardHeight],
           font: 'Helvetica'
         })
@@ -185,42 +186,44 @@ const generateOpitoIdCard = (req, profilePicture) =>
         doc.info.CreationDate = new Date()
         doc.info.FileName = `${file}.pdf`
 
-        await doc.pipe(fs.createWriteStream(fileName))
+        const writeStream = fs.createWriteStream(fileName)
 
-        await doc.image(backgroundImage, 0, 0, {
+        doc.pipe(writeStream)
+
+        doc.image(backgroundImage, 0, 0, {
           width: cardWidth,
           height: cardHeight
         })
 
-        await doc
+        doc
           .font('Helvetica-Bold')
           .fontSize(10)
           .fillColor('yellow')
           .text(front_id_text, 175, 32)
 
-        await doc.image(opitoLogo, 198, 48, { width: 38 })
+        doc.image(opitoLogo, 198, 48, { width: 38 })
 
-        await doc
+        doc
           .fontSize(8)
           .fillColor('white')
           .text(full_name, 85, 110, { width: cardWidth, height: cardHeight })
           .moveDown(0.5)
 
-        await doc
+        doc
           .text(`EXP: ${expiry}`, { width: cardWidth, height: cardHeight })
           .moveDown(0.5)
 
-        await doc.text(certificate, { width: cardWidth, height: cardHeight })
+        doc.text(certificate, { width: cardWidth, height: cardHeight })
 
         const buffer = await urlToBuffer(profilePicture)
 
         fs.writeFileSync('./test.jpg', buffer, 'binary')
 
-        await doc.image('./test.jpg', 2, 94, { width: 76 })
+        doc.image('./test.jpg', 2, 94, { width: 76 })
 
-        await doc.addPage()
+        doc.addPage()
 
-        await doc
+        doc
           .font('Helvetica')
           .fillColor('black')
           .fontSize(7)
@@ -231,15 +234,15 @@ const generateOpitoIdCard = (req, profilePicture) =>
             { width: cardWidth }
           )
 
-        await doc.text('appear overleaf has undergone ', {
+        doc.text('appear overleaf has undergone ', {
           width: cardWidth,
           height: cardHeight,
           continued: true
         })
 
-        await doc.font('Helvetica-Bold').text(`${back_id_text}.`).moveDown(0.5)
+        doc.font('Helvetica-Bold').text(`${back_id_text}.`).moveDown(0.5)
 
-        await doc
+        doc
           .font('Helvetica')
           .text('This card remains the property of TOLMANN.', {
             width: cardWidth,
@@ -247,7 +250,7 @@ const generateOpitoIdCard = (req, profilePicture) =>
           })
           .moveDown(0.5)
 
-        await doc
+        doc
           .text(
             'If found, please return to 7B Trans Amadi Industrial Layout, Port Harcourt.',
             { width: 180, height: cardHeight, continued: true }
@@ -257,7 +260,7 @@ const generateOpitoIdCard = (req, profilePicture) =>
             height: cardHeight
           })
 
-        await doc
+        doc
           .text('Signature:', 10, 140, {
             width: cardWidth,
             height: cardHeight
@@ -274,15 +277,15 @@ const generateOpitoIdCard = (req, profilePicture) =>
           width: 20
         })
 
-        await doc.image(qr, 190, 100)
+        doc.image(qr, 190, 100)
 
-        await doc.end()
+        doc.end()
 
         fs.unlink('./test.jpg', () => {})
 
-        resolve(doc)
+        writeStream.on('finish', () => resolve(doc))
       } catch (error) {
-        console.log(error)
+        reject(error)
       }
     })()
   )
