@@ -2,6 +2,7 @@ const { log } = require('../helpers/log')
 const { getFileName } = require('../helpers/converters')
 const { upload } = require('../services/uploader')
 const { sleep } = require('../helpers/constants')
+const { sendError } = require('../errors/error-monitoring')
 
 exports.uploadPicture = async (req, res) => {
   try {
@@ -25,10 +26,12 @@ exports.uploadPicture = async (req, res) => {
     upload(inputFile, outputFile, fileName, width, height)
       .then((info) => res.send(info))
       .catch((err) => {
+        sendError('upload.uploadPicture', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('upload.uploadPicture', err)
     console.error(err)
     log.error(err)
     res.status(500).send(err)
@@ -54,10 +57,12 @@ exports.uploadLearnerIdCard = async (req, res) => {
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
       .catch((err) => {
+        sendError('upload.uploadLearnerIdCard', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('upload.uploadLearnerIdCard', err)
     console.error(err)
     log.error(err)
     res.status(500).send(err)
@@ -83,10 +88,12 @@ exports.uploadPreviousFOET = async (req, res) => {
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
       .catch((err) => {
+        sendError('upload.uploadPreviousFOET', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('upload.uploadPreviousFOET', err)
     console.error(err)
     log.error(err)
     res.status(500).send(err)
@@ -114,10 +121,12 @@ exports.uploadTemplate = async (req, res) => {
     upload(inputFile, outputFile, fileName, null, height, 'contain')
       .then((info) => res.send(info))
       .catch((err) => {
+        sendError('upload.uploadTemplate', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('upload.uploadTemplate', err)
     console.error(err)
     log.error(err)
     res.status(500).send(err)
@@ -143,10 +152,12 @@ exports.uploadOpitoCertificate = async (req, res) => {
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
       .catch((err) => {
+        sendError('upload.uploadOpitoCertificate', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('upload.uploadOpitoCertificate', err)
     console.log(err)
     log.error(err)
     res.status(500).send(err)
@@ -172,10 +183,12 @@ exports.uploadPayment = async (req, res) => {
     upload(inputFile, outputFile, fileName)
       .then((info) => res.send(info))
       .catch((err) => {
+        sendError('upload.uploadPayment', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('upload.uploadPayment', err)
     console.log(err)
     log.error(err)
     res.status(500).send(err)

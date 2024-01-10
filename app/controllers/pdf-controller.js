@@ -20,6 +20,7 @@ const {
   getDocumentExists,
   getDocument
 } = require('../services/document-services')
+const { sendError } = require('./email-controller')
 
 exports.createCertificate = async (req, res) => {
   try {
@@ -56,6 +57,7 @@ exports.createCertificate = async (req, res) => {
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('pdf.sendWelcomeLetter', err)
     console.log(err)
     log.error(err)
     res.status(500).send(err)
@@ -113,6 +115,7 @@ exports.createIdCard = async (req, res) => {
                       res.status(500).send(err)
                     })
                 } catch (err) {
+                  sendError('pdf.createIdCard', err)
                   res.status(500).send(err)
                   console.log(err)
                 }
@@ -124,10 +127,12 @@ exports.createIdCard = async (req, res) => {
         }
       })
       .catch((err) => {
+        sendError('pdf.createIdCard', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('pdf.createIdCard', err)
     console.log(err)
     res.status(500).send(err)
   }
@@ -150,6 +155,7 @@ exports.createWelcomeLetter = async (req, res) => {
         res.status(500).send(err)
       })
   } catch (err) {
+    sendError('pdf.createWelcomeLetter', err)
     log.error(err)
     res.status(500).send(err)
   }

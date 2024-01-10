@@ -2,6 +2,7 @@ const { sendFile } = require('../services/database-service')
 const { log } = require('../helpers/log')
 const { getFileName } = require('../helpers/converters')
 const { sleep } = require('../helpers/constants')
+const { sendError } = require('../errors/error-monitoring')
 
 exports.sendFile = async (req, res) => {
   try {
@@ -21,6 +22,7 @@ exports.sendFile = async (req, res) => {
 
     res.send(resp)
   } catch (err) {
+    sendError('database.sendFile', err)
     console.log(err)
     log.error(err)
     res.status(500).send(err)
