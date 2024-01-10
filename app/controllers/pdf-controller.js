@@ -20,7 +20,7 @@ const {
   getDocumentExists,
   getDocument
 } = require('../services/document-services')
-const { sendError } = require('./email-controller')
+const { sendError } = require('../errors/error-monitoring')
 
 exports.createCertificate = async (req, res) => {
   try {
