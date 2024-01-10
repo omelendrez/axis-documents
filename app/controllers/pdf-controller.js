@@ -84,7 +84,6 @@ exports.createIdCard = async (req, res) => {
 
     getDocumentExists(profilePicture)
       .then((data, err) => {
-        console.log()
         if (err) {
           return res.status(404).send({
             message: 'Learner picture is required'
