@@ -1,10 +1,12 @@
-const fs = require('node:fs')
-const path = require('node:path')
-
 const EmailService = require('../services/EmailService')
 const { log } = require('../helpers/log')
 const isValidEmail = require('../helpers/validations')
 const ErrorMonitoring = require('../errors/error-monitoring')
+const {
+  getDocumentExists,
+  getDocument
+} = require('../services/document-services')
+const { urlToBuffer } = require('../helpers/converters')
 
 exports.sendError = async (req, res) => {
   try {
@@ -60,32 +62,27 @@ exports.sendWelcomeLetter = async (req, res) => {
     <p><i>Tolmann Allied Services Company Ltd</i></p>
     `
 
-    const filePath = path.join(
-      __dirname,
-      '..',
-      '..',
-      'exports',
-      'welcome-letter',
-      filename
-    )
+    const filePath = `${process.env.WELCOME_LETTER_FOLDER}/${filename}`
 
-    const fileContent = await fs.createReadStream(filePath)
-
-    const email = {
-      to,
-      bcc: process.env.SMTP_SERVER_BCC,
-      subject: 'COURSE JOINING INSTRUCTIONS',
-      html: body,
-      attachments: [
-        {
-          // utf-8 string as an attachment
-          filename,
-          content: fileContent
+    getDocumentExists(filePath).then(() => {
+      getDocument(filePath).then(async (url) => {
+        const buffer = await urlToBuffer(url)
+        const email = {
+          to,
+          bcc: process.env.SMTP_SERVER_BCC,
+          subject: 'COURSE JOINING INSTRUCTIONS',
+          html: body,
+          attachments: [
+            {
+              filename,
+              content: buffer
+            }
+          ]
         }
-      ]
-    }
-    emailService.sendEmail(email)
-    res.status(200).send({ ...email, message: 'Email sent successfully!' })
+        await emailService.sendEmail(email)
+        res.status(200).send({ ...email, message: 'Email sent successfully!' })
+      })
+    })
   } catch (error) {
     ErrorMonitoring.sendError('email.sendWelcomeLetter', error)
     console.log(error)

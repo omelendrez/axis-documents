@@ -53,11 +53,12 @@ exports.createCertificate = async (req, res) => {
     upload(filePath, filePath, fileName)
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
+        sendError('pdf.createCertificate', err)
         console.log(err)
         res.status(500).send(err)
       })
   } catch (err) {
-    sendError('pdf.sendWelcomeLetter', err)
+    sendError('pdf.createCertificate', err)
     console.log(err)
     log.error(err)
     res.status(500).send(err)
@@ -111,6 +112,7 @@ exports.createIdCard = async (req, res) => {
                   upload(filePath, filePath, fileName)
                     .then((info) => res.send({ info, ...doc.info }))
                     .catch((err) => {
+                      sendError('pdf.createIdCard', err)
                       console.log(err)
                       res.status(500).send(err)
                     })
@@ -151,6 +153,7 @@ exports.createWelcomeLetter = async (req, res) => {
     upload(filePath, filePath, fileName)
       .then((info) => res.send({ info, ...doc.info }))
       .catch((err) => {
+        sendError('pdf.createWelcomeLetter', err)
         console.log(err)
         res.status(500).send(err)
       })
