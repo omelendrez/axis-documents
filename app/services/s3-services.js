@@ -68,24 +68,20 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
 
 const checkDocumentExists = (file) =>
   (async () => {
-    try {
-      const params = {
-        Bucket: awsS3BucketName,
-        Key: file
-      }
-
-      const head = await new HeadObjectCommand(params)
-
-      await s3.send(head)
-
-      api.get(`s3-document/exists?file=${file}`).then((res) => {
-        if (!res.data.exists) {
-          api.post('s3-document', { file })
-        }
-      })
-    } catch (error) {
-      console.log(error)
+    const params = {
+      Bucket: awsS3BucketName,
+      Key: file
     }
+
+    const head = await new HeadObjectCommand(params)
+
+    await s3.send(head)
+
+    api.get(`s3-document/exists?file=${file}`).then((res) => {
+      if (!res.data.exists) {
+        api.post('s3-document', { file })
+      }
+    })
   })()
 
 const getDocumentUrl = (file) =>
