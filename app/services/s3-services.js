@@ -66,7 +66,7 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
     })()
   )
 
-const checkDocument = (file) =>
+const checkDocumentExists = (file) =>
   (async () => {
     try {
       const params = {
@@ -117,6 +117,6 @@ module.exports = {
   awsS3BucketName,
   getSignedUrl,
   sendToS3,
-  checkDocument,
+  checkDocumentExists,
   getDocumentUrl
 }
