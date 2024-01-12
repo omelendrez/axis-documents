@@ -79,7 +79,7 @@ const checkDocument = (file) =>
       await s3.send(head)
 
       api.get(`s3-document/exists?file=${file}`).then((res) => {
-        if (res.data.exists) {
+        if (!res.data.exists) {
           api.post('s3-document', { file })
         }
       })
