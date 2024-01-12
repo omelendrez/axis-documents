@@ -1,8 +1,8 @@
-const { checkDocument, getDocumentUrl } = require('./s3-services')
+const { checkDocumentExists, getDocumentUrl } = require('./s3-services')
 
 exports.getDocumentExists = (file) =>
   new Promise((resolve) =>
-    checkDocument(file)
+    checkDocumentExists(file)
       .then(() => resolve({ exists: true }))
       .catch(() => resolve({ exists: false }))
   )

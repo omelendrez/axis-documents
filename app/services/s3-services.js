@@ -66,21 +66,25 @@ const sendToS3 = (inputFile, outputFile, fileName, contentType) =>
     })()
   )
 
-const checkDocument = (file) =>
+const checkDocumentExists = (file) =>
   (async () => {
-    const params = {
-      Bucket: awsS3BucketName,
-      Key: file
-    }
+    try {
+      const params = {
+        Bucket: awsS3BucketName,
+        Key: file
+      }
 
-    const head = await new HeadObjectCommand(params)
+      const head = await new HeadObjectCommand(params)
 
-    await s3.send(head)
+      await s3.send(head)
 
-    const resp = await api.get(`s3-document/exists?file=${file}`)
-
-    if (!resp.exists) {
-      await api.post('s3-document', { file })
+      api.get(`s3-document/exists?file=${file}`).then((res) => {
+        if (!res.data.exists) {
+          api.post('s3-document', { file })
+        }
+      })
+    } catch (error) {
+      console.log(error)
     }
   })()
 
@@ -113,6 +117,6 @@ module.exports = {
   awsS3BucketName,
   getSignedUrl,
   sendToS3,
-  checkDocument,
+  checkDocumentExists,
   getDocumentUrl
 }
