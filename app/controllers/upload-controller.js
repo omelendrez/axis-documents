@@ -52,9 +52,11 @@ exports.uploadLearnerIdCard = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.LEARNER_ID_FOLDER}/${fileName}`
 
+    const width = 1000
+
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload(inputFile, outputFile, fileName, width)
       .then((info) => res.send(info))
       .catch((err) => {
         sendError('upload.uploadLearnerIdCard', err)
@@ -83,9 +85,11 @@ exports.uploadPreviousFOET = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.FOET_FOLDER}/${fileName}`
 
+    const width = 1000
+
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload(inputFile, outputFile, fileName, width)
       .then((info) => res.send(info))
       .catch((err) => {
         sendError('upload.uploadPreviousFOET', err)
@@ -178,9 +182,11 @@ exports.uploadPayment = async (req, res) => {
     const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
     const outputFile = `${process.env.PAYMENT_FOLDER}/${fileName}`
 
+    const width = 1000
+
     await sleep(1000)
 
-    upload(inputFile, outputFile, fileName)
+    upload(inputFile, outputFile, fileName, width)
       .then((info) => res.send(info))
       .catch((err) => {
         sendError('upload.uploadPayment', err)
