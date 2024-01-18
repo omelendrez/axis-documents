@@ -101,9 +101,9 @@ const processImageFile = (
 
         const fileDir = path.join(__dirname, '..', '..', outputFile)
 
-        await sendToS3(fileDir, outputFile, fileName, 'image/jpeg')
-
-        resolve(fileName)
+        sendToS3(fileDir, outputFile, fileName, 'image/jpeg')
+          .then(() => resolve(fileName))
+          .catch((err) => reject(err))
       } catch (error) {
         reject(error)
       }
@@ -111,36 +111,25 @@ const processImageFile = (
   )
 
 const processPdfFile = (inputFile, outputFile, fileName) =>
-  new Promise((resolve, reject) =>
-    (async () => {
-      try {
-        const fileDir = path.join(__dirname, '..', '..', inputFile)
+  new Promise((resolve, reject) => {
+    const fileDir = path.join(__dirname, '..', '..', inputFile)
 
-        if (fs.existsSync(fileDir)) {
-          await sendToS3(fileDir, outputFile, fileName, 'application/pdf')
-          resolve(fileName)
-        } else {
-          reject(`File not found ${fileDir}`)
-        }
-      } catch (error) {
-        reject(error)
-      }
-    })()
-  )
+    if (fs.existsSync(fileDir)) {
+      sendToS3(fileDir, outputFile, fileName, 'application/pdf')
+        .then(() => resolve(fileName))
+        .catch((err) => reject(err))
+    } else {
+      reject(`File not found ${fileDir}`)
+    }
+  })
 
 const processSqlFile = (inputFile, outputFile, fileName) =>
-  new Promise((resolve, reject) =>
-    (async () => {
-      try {
-        if (fs.existsSync(inputFile)) {
-          await sendToS3(inputFile, outputFile, fileName, 'application/x-sql')
-
-          resolve(fileName)
-        } else {
-          reject(`File not found ${inputFile}`)
-        }
-      } catch (error) {
-        reject(error)
-      }
-    })()
-  )
+  new Promise((resolve, reject) => {
+    if (fs.existsSync(inputFile)) {
+      sendToS3(inputFile, outputFile, fileName, 'application/x-sql')
+        .then(() => resolve(fileName))
+        .catch((err) => reject(err))
+    } else {
+      reject(`File not found ${inputFile}`)
+    }
+  })
