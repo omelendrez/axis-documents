@@ -4,13 +4,11 @@ const middleware = require('../middleware/upload-middleware')
 module.exports = async (app) => {
   const router = require('express').Router()
 
-  const upload = middleware.upload
-
   // Pictures
 
   router.post(
     process.env.PICTURE_ENDPOINT,
-    upload.single('file'),
+    middleware.uploadHandler,
     controller.uploadPicture
   )
 
@@ -18,7 +16,7 @@ module.exports = async (app) => {
 
   router.post(
     process.env.LEARNER_ID_ENDPOINT,
-    upload.single('file'),
+    middleware.uploadHandler,
     controller.uploadLearnerIdCard
   )
 
@@ -26,7 +24,7 @@ module.exports = async (app) => {
 
   router.post(
     process.env.FOET_ENDPOINT,
-    upload.single('file'),
+    middleware.uploadHandler,
     controller.uploadPreviousFOET
   )
 
@@ -34,7 +32,7 @@ module.exports = async (app) => {
 
   router.post(
     process.env.PAYMENT_ENDPOINT,
-    upload.single('file'),
+    middleware.uploadHandler,
     controller.uploadPayment
   )
 
@@ -42,7 +40,7 @@ module.exports = async (app) => {
 
   router.post(
     `${process.env.OPITO_ENDPOINT}/upload`,
-    upload.single('file'),
+    middleware.uploadHandler,
     controller.uploadOpitoCertificate
   )
 
