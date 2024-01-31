@@ -25,37 +25,33 @@ exports.upload = (
   rotate
 ) =>
   new Promise((resolve, reject) => {
-    try {
-      const fileExtension = outputFile.split('.').pop()
+    const fileExtension = outputFile.split('.').pop()
 
-      switch (fileExtension) {
-        case 'jpg':
-          processImageFile(
-            inputFile,
-            outputFile,
-            fileName,
-            width,
-            height,
-            fit,
-            rotate
-          )
-            .then((res) => resolve(res))
-            .catch((error) => reject(error))
-          break
+    switch (fileExtension) {
+      case 'jpg':
+        processImageFile(
+          inputFile,
+          outputFile,
+          fileName,
+          width,
+          height,
+          fit,
+          rotate
+        )
+          .then((res) => resolve(res))
+          .catch((error) => reject(error))
+        break
 
-        case 'pdf':
-          processPdfFile(inputFile, outputFile, fileName)
-            .then((res) => resolve(res))
-            .catch((error) => reject(error))
-          break
+      case 'pdf':
+        processPdfFile(inputFile, outputFile, fileName)
+          .then((res) => resolve(res))
+          .catch((error) => reject(error))
+        break
 
-        case 'sql':
-          processSqlFile(inputFile, outputFile, fileName)
-            .then((res) => resolve(res))
-            .catch((error) => reject(error))
-      }
-    } catch (error) {
-      reject(error)
+      case 'sql':
+        processSqlFile(inputFile, outputFile, fileName)
+          .then((res) => resolve(res))
+          .catch((error) => reject(error))
     }
   })
 
