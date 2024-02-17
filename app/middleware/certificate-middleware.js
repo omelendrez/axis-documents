@@ -23,8 +23,6 @@ const generateStandardCertificate = (req) =>
           course
         } = req.body
 
-        console.log('generateStandardCertificate')
-
         const { expiry_type, name: courseName } = course
 
         const backgroundImage = './templates/certificates/certificate.jpg'
