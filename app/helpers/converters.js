@@ -55,10 +55,28 @@ function getTodayYMD() {
   return `${paddedYear}-${paddedMonth}-${paddedDay}`
 }
 
+const nthNumber = (number) => {
+  return number > 0
+    ? ['th', 'st', 'nd', 'rd'][
+        (number > 3 && number < 21) || number % 10 > 3 ? 0 : number % 10
+      ]
+    : ''
+}
+
+const formatCertificateDate = (date) => {
+  const dateObj = new Date(date.split('/').reverse().join('-'))
+  const day = dateObj.getDate()
+  const month = dateObj.toLocaleString('default', { month: 'long' })
+  const year = dateObj.getFullYear()
+
+  return `${day}${nthNumber(day)} ${month}, ${year}`
+}
+
 module.exports = {
   documentNumber,
   toWord,
   getFileName,
   urlToBuffer,
-  getTodayYMD
+  getTodayYMD,
+  formatCertificateDate
 }
