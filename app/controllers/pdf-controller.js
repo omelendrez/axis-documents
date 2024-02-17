@@ -45,36 +45,41 @@ exports.createCertificate = async (req, res) => {
       // generateCertificate = forklift
       break
   }
-  getProfilePictureUrl(profilePicture).then(async (data, err) => {
-    if (err) {
-      return res.status(err.status).json({
-        message: err.message
+
+  let data
+
+  if (profilePicture) {
+    try {
+      data = await getProfilePictureUrl(profilePicture)
+    } catch (error) {
+      return res.status(error.status).json({
+        message: error.message
       })
     }
+  }
 
-    try {
-      const doc = await generateCertificate(req, data)
+  try {
+    const doc = await generateCertificate(req, data)
 
-      const fileName = await doc.info.FileName
+    const fileName = await doc.info.FileName
 
-      const filePath = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
+    const filePath = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
-      await sleep(1000)
+    await sleep(1000)
 
-      upload(filePath, filePath, fileName)
-        .then((info) => res.json({ info, ...doc.info }))
-        .catch((err) => {
-          sendError('pdf.createCertificate', err)
-          console.log(err)
-          res.status(500).json(err)
-        })
-    } catch (err) {
-      sendError('pdf.createCertificate', err)
-      console.log(err)
-      log.error(err)
-      res.status(500).json(err)
-    }
-  })
+    upload(filePath, filePath, fileName)
+      .then((info) => res.json({ info, ...doc.info }))
+      .catch((err) => {
+        sendError('pdf.createCertificate', err)
+        console.log(err)
+        res.status(500).json(err)
+      })
+  } catch (err) {
+    sendError('pdf.createCertificate', err)
+    console.log(err)
+    log.error(err)
+    res.status(500).json(err)
+  }
 }
 
 exports.createIdCard = async (req, res) => {
