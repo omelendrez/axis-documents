@@ -101,35 +101,43 @@ exports.createIdCard = async (req, res) => {
 
   const profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
 
-  getProfilePictureUrl(profilePicture).then(async (data, err) => {
-    if (err) {
-      return res.status(err.status).json({
-        message: err.message
-      })
-    }
-
-    try {
-      const doc = await generateIdCard(req, data)
-
-      const fileName = doc.info.FileName
-
-      const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
-
-      await sleep(1000)
-
-      upload(filePath, filePath, fileName)
-        .then((info) => res.json({ info, ...doc.info }))
-        .catch((err) => {
-          sendError('pdf.createIdCard', err)
-          console.log(err)
-          res.status(500).json(err)
+  getProfilePictureUrl(profilePicture)
+    .then(async (data, err) => {
+      if (err) {
+        return res.status(err.status).json({
+          message: err.message
         })
-    } catch (err) {
+      }
+
+      try {
+        const doc = await generateIdCard(req, data)
+
+        const fileName = doc.info.FileName
+
+        const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
+
+        await sleep(1000)
+
+        upload(filePath, filePath, fileName)
+          .then((info) => res.json({ info, ...doc.info }))
+          .catch((err) => {
+            sendError('pdf.createIdCard', err)
+            console.log(err)
+            res.status(500).json(err)
+          })
+      } catch (err) {
+        sendError('pdf.createIdCard', err)
+        console.log(err)
+        return res.status(err.status).json({
+          message: err.message
+        })
+      }
+    })
+    .catch((err) => {
       sendError('pdf.createIdCard', err)
-      res.status(500).json(err)
       console.log(err)
-    }
-  })
+      res.status(500).json(err)
+    })
 }
 
 exports.createWelcomeLetter = async (req, res) => {
