@@ -21,6 +21,8 @@ const getProfilePictureUrl = (profilePicturePath) =>
               resolve(data)
             }
           })
+        } else {
+          reject(errorResponse)
         }
       }
     })
