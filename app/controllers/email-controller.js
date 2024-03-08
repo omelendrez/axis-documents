@@ -6,10 +6,10 @@ const {
   getDocumentExists,
   getDocument
 } = require('../services/document-services')
-import {
+const {
   sendEmailHandler,
   sendErrorEmailHandler
-} from '../services/emailHandler'
+} = require('../services/emailHandler')
 const { urlToBuffer } = require('../helpers/converters')
 
 exports.sendError = async (req, res) => {
