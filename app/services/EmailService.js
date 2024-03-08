@@ -1,16 +1,17 @@
 const EventEmitter = require('events')
-const { sendEmailHandler } = require('./emailHandler')
 const { log } = require('../helpers/log')
 
 class EmailService extends EventEmitter {
-  constructor() {
+  _handler = null
+
+  constructor(handler) {
     super()
+    this._handler = handler
   }
 
   async sendEmail(email) {
     try {
-      const response = await sendEmailHandler(email)
-      this.emit('emailSent', response)
+      await this._handler(email)
     } catch (error) {
       console.log(error)
       log.error(error)

@@ -6,11 +6,15 @@ const {
   getDocumentExists,
   getDocument
 } = require('../services/document-services')
+import {
+  sendEmailHandler,
+  sendErrorEmailHandler
+} from '../services/emailHandler'
 const { urlToBuffer } = require('../helpers/converters')
 
 exports.sendError = async (req, res) => {
   try {
-    const emailService = new EmailService()
+    const emailService = new EmailService(sendErrorEmailHandler)
 
     const { controller, error } = req.body
 
@@ -24,7 +28,6 @@ exports.sendError = async (req, res) => {
 
     const email = {
       to: 'omar.melendrez@gmail.com',
-      bcc: process.env.SMTP_SERVER_BCC,
       subject: 'Axis Backend server error found',
       html: body
     }
@@ -41,7 +44,7 @@ exports.sendError = async (req, res) => {
 
 exports.sendWelcomeLetter = async (req, res) => {
   try {
-    const emailService = new EmailService()
+    const emailService = new EmailService(sendEmailHandler)
     const message = req.body
 
     const { to, course, filename, full_name: fullName } = message
@@ -69,7 +72,6 @@ exports.sendWelcomeLetter = async (req, res) => {
         const buffer = await urlToBuffer(url)
         const email = {
           to,
-          bcc: process.env.SMTP_SERVER_BCC,
           subject: 'COURSE JOINING INSTRUCTIONS',
           html: body,
           attachments: [
