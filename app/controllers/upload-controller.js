@@ -88,9 +88,7 @@ exports.uploadTemplate = (req, res) => {
   const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
   const outputFile = `${process.env.FOET_FOLDER}/${fileName}`
 
-  const height = parseInt(process.env.FOET_HEIGHT, 10)
-
-  upload(inputFile, outputFile, fileName, null, height, 'contain')
+  upload(inputFile, outputFile, fileName)
     .then((info) => res.send(info))
     .catch((err) => {
       sendError('upload.uploadTemplate', err)

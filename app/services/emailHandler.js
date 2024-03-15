@@ -51,8 +51,8 @@ assert.ok(
   'The "CLIENT_SMTP_SERVER_FROM" environment variable is required'
 )
 
-exports.sendErrorEmailHandler = (email) => {
-  return new Promise((resolve, reject) => {
+exports.sendErrorEmailHandler = (email) =>
+  new Promise((resolve, reject) => {
     const from = process.env.SMTP_SERVER_FROM
 
     const newEmail = { ...email, from }
@@ -76,10 +76,9 @@ exports.sendErrorEmailHandler = (email) => {
       resolve(info)
     })
   })
-}
 
-exports.sendEmailHandler = (email) => {
-  return new Promise((resolve, reject) => {
+exports.sendEmailHandler = (email) =>
+  new Promise((resolve, reject) => {
     const from = process.env.CLIENT_SMTP_SERVER_FROM
     const bcc = process.env.CLIENT_SMTP_SERVER_BCC
 
@@ -104,4 +103,3 @@ exports.sendEmailHandler = (email) => {
       resolve(info)
     })
   })
-}
