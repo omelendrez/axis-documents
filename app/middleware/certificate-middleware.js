@@ -45,6 +45,7 @@ const generateStandardCertificate = (req) =>
         doc.info.Producer = 'Axis v2.0'
         doc.info.CreationDate = new Date()
         doc.info.FileName = `${file}.pdf`
+        doc.info.Path = process.env.PDF_CERTIFICATE_FOLDER
 
         const writeStream = fs.createWriteStream(fileName)
 
@@ -189,6 +190,7 @@ const generateNimasaCertificate = async (req, profilePicture) =>
         doc.info.Producer = 'Axis v2.0'
         doc.info.CreationDate = new Date()
         doc.info.FileName = `${file}.pdf`
+        doc.info.Path = process.env.PDF_CERTIFICATE_FOLDER
 
         const writeStream = fs.createWriteStream(fileName)
 

@@ -18,6 +18,7 @@ const { welcome } = require('../middleware/welcome-middleware')
 
 const { sendError } = require('../errors/error-monitoring')
 const { getProfilePictureUrl } = require('../helpers/profilePicture')
+const { api } = require('../services/api-service')
 
 exports.createCertificate = async (req, res) => {
   const {
@@ -56,6 +57,12 @@ exports.createCertificate = async (req, res) => {
 
   try {
     const doc = await generateCertificate(req, data)
+
+    const { Path, FileName } = doc.info
+
+    const file = `${Path}/${FileName}`
+
+    await api.post('s3-document', { file })
 
     await sleep(SLEEP_TIMEOUT)
 
@@ -98,6 +105,12 @@ exports.createIdCard = async (req, res) => {
       try {
         const doc = await generateIdCard(req, data)
 
+        const { Path, FileName } = doc.info
+
+        const file = `${Path}/${FileName}`
+
+        await api.post('s3-document', { file })
+
         await sleep(SLEEP_TIMEOUT)
 
         res.json({ ...doc.info })
@@ -119,6 +132,12 @@ exports.createIdCard = async (req, res) => {
 exports.createWelcomeLetter = async (req, res) => {
   try {
     const doc = await welcome(req)
+
+    const { Path, FileName } = doc.info
+
+    const file = `${Path}/${FileName}`
+
+    await api.post('s3-document', { file })
 
     await sleep(SLEEP_TIMEOUT)
 

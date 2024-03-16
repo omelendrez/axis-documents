@@ -2,6 +2,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const sharp = require('sharp')
 const { sleep, SLEEP_TIMEOUT } = require('../helpers/constants')
+const { api } = require('./api-service')
 
 /**
  *
@@ -99,6 +100,8 @@ const processImageFile = (
           fs.unlinkSync(inputFile)
         }
 
+        await api.post('s3-document', { file: outputFile })
+
         await sleep(SLEEP_TIMEOUT)
 
         resolve(fileName)
@@ -115,6 +118,8 @@ const processPdfFile = (inputFile, outputFile, fileName) =>
         const fileDir = path.join(__dirname, '..', '..', inputFile)
 
         fs.renameSync(fileDir, outputFile)
+
+        await api.post('s3-document', { file: outputFile })
 
         await sleep(SLEEP_TIMEOUT)
 
@@ -135,6 +140,8 @@ const processSqlFile = (inputFile, outputFile, fileName) =>
       try {
         if (fs.existsSync(inputFile)) {
           fs.unlinkSync(inputFile)
+
+          await api.post('s3-document', { file: outputFile })
 
           await sleep(SLEEP_TIMEOUT)
 
