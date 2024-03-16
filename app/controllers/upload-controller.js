@@ -1,5 +1,5 @@
 const { getFileName } = require('../helpers/converters')
-const { upload } = require('../services/uploader')
+const { postProcess } = require('../services/uploader')
 const { sendError } = require('../errors/error-monitoring')
 
 exports.uploadPicture = (req, res) => {
@@ -18,10 +18,10 @@ exports.uploadPicture = (req, res) => {
   const width = parseInt(process.env.PICTURE_WIDTH, 10)
   const height = parseInt(process.env.PICTURE_HEIGHT, 10)
 
-  upload(inputFile, outputFile, fileName, width, height)
+  postProcess(inputFile, outputFile, fileName, width, height)
     .then((info) => res.send(info))
     .catch((err) => {
-      sendError('upload.uploadPicture', err)
+      sendError('postProcess.uploadPicture', err)
       console.log(err)
       res.status(500).send(err)
     })
@@ -42,10 +42,10 @@ exports.uploadLearnerIdCard = (req, res) => {
 
   const width = 1000
 
-  upload(inputFile, outputFile, fileName, width)
+  postProcess(inputFile, outputFile, fileName, width)
     .then((info) => res.send(info))
     .catch((err) => {
-      sendError('upload.uploadLearnerIdCard', err)
+      sendError('postProcess.uploadLearnerIdCard', err)
       console.log(err)
       res.status(500).send(err)
     })
@@ -66,10 +66,10 @@ exports.uploadPreviousFOET = (req, res) => {
 
   const width = 1000
 
-  upload(inputFile, outputFile, fileName, width)
+  postProcess(inputFile, outputFile, fileName, width)
     .then((info) => res.send(info))
     .catch((err) => {
-      sendError('upload.uploadPreviousFOET', err)
+      sendError('postProcess.uploadPreviousFOET', err)
       console.log(err)
       res.status(500).send(err)
     })
@@ -88,12 +88,10 @@ exports.uploadTemplate = (req, res) => {
   const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
   const outputFile = `${process.env.FOET_FOLDER}/${fileName}`
 
-  const height = parseInt(process.env.FOET_HEIGHT, 10)
-
-  upload(inputFile, outputFile, fileName, null, height, 'contain')
+  postProcess(inputFile, outputFile, fileName)
     .then((info) => res.send(info))
     .catch((err) => {
-      sendError('upload.uploadTemplate', err)
+      sendError('postProcess.uploadTemplate', err)
       console.log(err)
       res.status(500).send(err)
     })
@@ -112,10 +110,10 @@ exports.uploadOpitoCertificate = (req, res) => {
   const inputFile = `${process.env.COMPRESS_TEMP_FOLDER}/${fileName}`
   const outputFile = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
 
-  upload(inputFile, outputFile, fileName)
+  postProcess(inputFile, outputFile, fileName)
     .then((info) => res.send(info))
     .catch((err) => {
-      sendError('upload.uploadOpitoCertificate', err)
+      sendError('postProcess.uploadOpitoCertificate', err)
       console.log(err)
       res.status(500).send(err)
     })
@@ -136,10 +134,10 @@ exports.uploadPayment = (req, res) => {
 
   const width = 1000
 
-  upload(inputFile, outputFile, fileName, width)
+  postProcess(inputFile, outputFile, fileName, width)
     .then((info) => res.send(info))
     .catch((err) => {
-      sendError('upload.uploadPayment', err)
+      sendError('postProcess.uploadPayment', err)
       console.log(err)
       res.status(500).send(err)
     })

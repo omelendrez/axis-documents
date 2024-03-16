@@ -2,10 +2,7 @@ const EmailService = require('../services/EmailService')
 const { log } = require('../helpers/log')
 const isValidEmail = require('../helpers/validations')
 const ErrorMonitoring = require('../errors/error-monitoring')
-const {
-  getDocumentExists,
-  getDocument
-} = require('../services/document-services')
+const { getDocumentExists, getDocument } = require('../services/file-service')
 const {
   sendEmailHandler,
   sendErrorEmailHandler

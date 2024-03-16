@@ -1,7 +1,4 @@
-const {
-  getDocumentExists,
-  getDocument
-} = require('../services/document-services')
+const { getFileExists } = require('../services/file-service')
 
 const getProfilePictureUrl = (profilePicturePath) =>
   new Promise((resolve, reject) => {
@@ -9,18 +6,12 @@ const getProfilePictureUrl = (profilePicturePath) =>
       status: 404,
       message: 'Learner picture is required'
     }
-    getDocumentExists(profilePicturePath).then((data, err) => {
+    getFileExists(profilePicturePath).then((data, err) => {
       if (err) {
         reject(errorResponse)
       } else {
         if (data.exists) {
-          getDocument(profilePicturePath).then(async (data, err) => {
-            if (err) {
-              reject(errorResponse)
-            } else {
-              resolve(data)
-            }
-          })
+          resolve(profilePicturePath)
         } else {
           reject(errorResponse)
         }

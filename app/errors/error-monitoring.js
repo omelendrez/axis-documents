@@ -1,4 +1,5 @@
 const EmailService = require('../services/EmailService')
+const strategy = require('../services/emailHandler')
 
 const sendError = (controller, error) => {
   const err = JSON.stringify(error, null, 2)
@@ -7,15 +8,14 @@ const sendError = (controller, error) => {
   <p>Controller: <code>${controller}<code></p>
   <p><code>${err}<code></p>
   <br/><br/>
-  <p><b>From Document server</b></p>
+  <p><b>From Documents Microservice</b></p>
   `
 
-  const emailService = new EmailService()
+  const emailService = new EmailService(strategy.sendErrorEmailHandler)
 
   const email = {
-    to: 'omar.melendrez@gmail.com',
-    bcc: process.env.SMTP_SERVER_BCC,
-    subject: 'Axis Documents server error found',
+    to: process.env.SMTP_SERVER_FROM,
+    subject: 'Axis Documents Microservice error found',
     html: body
   }
 
