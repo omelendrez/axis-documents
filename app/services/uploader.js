@@ -1,11 +1,11 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const sharp = require('sharp')
-const { sendToS3 } = require('./s3-services')
+const { sleep, SLEEP_TIMEOUT } = require('../helpers/constants')
 
 /**
  *
- * @param {string/sream} inputFile
+ * @param {object} inputFile
  * @param {string} outputFile
  * @param {string} fileName
  * @param {number} width
@@ -15,7 +15,7 @@ const { sendToS3 } = require('./s3-services')
  * @param {boolean} isStream
  * @returns Promise
  */
-exports.upload = (
+exports.postProcess = (
   inputFile,
   outputFile,
   fileName,
@@ -95,11 +95,13 @@ const processImageFile = (
 
         await fileOperation.toFile(outputFile)
 
-        const fileDir = path.join(__dirname, '..', '..', outputFile)
+        if (fs.existsSync(inputFile)) {
+          fs.unlinkSync(inputFile)
+        }
 
-        sendToS3(fileDir, outputFile, fileName, 'image/jpeg')
-          .then(() => resolve(fileName))
-          .catch((err) => reject(err))
+        await sleep(SLEEP_TIMEOUT)
+
+        resolve(fileName)
       } catch (error) {
         reject(error)
       }
@@ -107,25 +109,41 @@ const processImageFile = (
   )
 
 const processPdfFile = (inputFile, outputFile, fileName) =>
-  new Promise((resolve, reject) => {
-    const fileDir = path.join(__dirname, '..', '..', inputFile)
+  new Promise((resolve, reject) =>
+    (async () => {
+      try {
+        const fileDir = path.join(__dirname, '..', '..', inputFile)
 
-    if (fs.existsSync(fileDir)) {
-      sendToS3(fileDir, outputFile, fileName, 'application/pdf')
-        .then(() => resolve(fileName))
-        .catch((err) => reject(err))
-    } else {
-      reject(`File not found ${fileDir}`)
-    }
-  })
+        fs.renameSync(fileDir, outputFile)
+
+        await sleep(SLEEP_TIMEOUT)
+
+        if (fs.existsSync(outputFile)) {
+          resolve(fileName)
+        } else {
+          reject(`File not found ${fileDir}`)
+        }
+      } catch (error) {
+        reject(error)
+      }
+    })()
+  )
 
 const processSqlFile = (inputFile, outputFile, fileName) =>
-  new Promise((resolve, reject) => {
-    if (fs.existsSync(inputFile)) {
-      sendToS3(inputFile, outputFile, fileName, 'application/x-sql')
-        .then(() => resolve(fileName))
-        .catch((err) => reject(err))
-    } else {
-      reject(`File not found ${inputFile}`)
-    }
-  })
+  new Promise((resolve, reject) =>
+    (async () => {
+      try {
+        if (fs.existsSync(inputFile)) {
+          fs.unlinkSync(inputFile)
+
+          await sleep(SLEEP_TIMEOUT)
+
+          resolve(fileName)
+        } else {
+          reject(`File not found ${inputFile}`)
+        }
+      } catch (error) {
+        reject(error)
+      }
+    })()
+  )

@@ -1,7 +1,7 @@
 const { sendFile } = require('../services/database-service')
 const { log } = require('../helpers/log')
 const { getFileName } = require('../helpers/converters')
-const { sleep } = require('../helpers/constants')
+const { sleep, SLEEP_TIMEOUT } = require('../helpers/constants')
 const { sendError } = require('../errors/error-monitoring')
 
 exports.sendFile = async (req, res) => {
@@ -16,7 +16,7 @@ exports.sendFile = async (req, res) => {
 
     const fileName = getFileName(req.body.name, data)
 
-    await sleep(1000)
+    await sleep(SLEEP_TIMEOUT)
 
     const resp = await sendFile(fileName)
 

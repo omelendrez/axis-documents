@@ -2,7 +2,7 @@
 
 const { log } = require('../helpers/log')
 
-const { CERT_TYPE, sleep } = require('../helpers/constants')
+const { CERT_TYPE, sleep, SLEEP_TIMEOUT } = require('../helpers/constants')
 
 const {
   generateStandardCertificate,
@@ -15,11 +15,7 @@ const {
 } = require('../middleware/id-card-middleware')
 
 const { welcome } = require('../middleware/welcome-middleware')
-const { upload } = require('../services/uploader')
-const {
-  getDocumentExists,
-  getDocument
-} = require('../services/document-services')
+
 const { sendError } = require('../errors/error-monitoring')
 const { getProfilePictureUrl } = require('../helpers/profilePicture')
 
@@ -61,19 +57,9 @@ exports.createCertificate = async (req, res) => {
   try {
     const doc = await generateCertificate(req, data)
 
-    const fileName = await doc.info.FileName
+    await sleep(SLEEP_TIMEOUT)
 
-    const filePath = `${process.env.PDF_CERTIFICATE_FOLDER}/${fileName}`
-
-    await sleep(1000)
-
-    upload(filePath, filePath, fileName)
-      .then((info) => res.json({ info, ...doc.info }))
-      .catch((err) => {
-        sendError('pdf.createCertificate', err)
-        console.log(err)
-        res.status(500).json(err)
-      })
+    res.json({ ...doc.info })
   } catch (err) {
     sendError('pdf.createCertificate', err)
     console.log(err)
@@ -112,19 +98,9 @@ exports.createIdCard = async (req, res) => {
       try {
         const doc = await generateIdCard(req, data)
 
-        const fileName = doc.info.FileName
+        await sleep(SLEEP_TIMEOUT)
 
-        const filePath = `${process.env.PDF_ID_CARD_FOLDER}/${fileName}`
-
-        await sleep(1000)
-
-        upload(filePath, filePath, fileName)
-          .then((info) => res.json({ info, ...doc.info }))
-          .catch((err) => {
-            sendError('pdf.createIdCard', err)
-            console.log(err)
-            res.status(500).json(err)
-          })
+        res.json({ ...doc.info })
       } catch (err) {
         sendError('pdf.createIdCard', err)
         console.log(err)
@@ -144,19 +120,9 @@ exports.createWelcomeLetter = async (req, res) => {
   try {
     const doc = await welcome(req)
 
-    const fileName = await doc.info.FileName
+    await sleep(SLEEP_TIMEOUT)
 
-    const filePath = `${process.env.WELCOME_LETTER_FOLDER}/${fileName}`
-
-    await sleep(1000)
-
-    upload(filePath, filePath, fileName)
-      .then((info) => res.json({ info, ...doc.info }))
-      .catch((err) => {
-        sendError('pdf.createWelcomeLetter', err)
-        console.log(err)
-        res.status(500).json(err)
-      })
+    res.json({ ...doc.info })
   } catch (err) {
     sendError('pdf.createWelcomeLetter', err)
     log.error(err)

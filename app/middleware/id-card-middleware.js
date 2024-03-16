@@ -162,8 +162,6 @@ const generateOpitoIdCard = (req, profilePicture) =>
           course: { name: courseName, front_id_text, back_id_text }
         } = req.body
 
-        // const profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
-
         const backgroundImage = './templates/id_cards/idcard_front.jpg'
         const signatureImage = './templates/id_cards/signature.jpg'
 
@@ -215,11 +213,7 @@ const generateOpitoIdCard = (req, profilePicture) =>
 
         doc.text(certificate, { width: cardWidth, height: cardHeight })
 
-        const buffer = await urlToBuffer(profilePicture)
-
-        fs.writeFileSync('./test.jpg', buffer, 'binary')
-
-        doc.image('./test.jpg', 2, 94, { width: 76 })
+        doc.image(profilePicture, 2, 94, { width: 76 })
 
         doc.addPage()
 
@@ -280,8 +274,6 @@ const generateOpitoIdCard = (req, profilePicture) =>
         doc.image(qr, 190, 100)
 
         doc.end()
-
-        fs.unlink('./test.jpg', () => {})
 
         writeStream.on('finish', () => resolve(doc))
       } catch (error) {

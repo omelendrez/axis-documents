@@ -1,6 +1,5 @@
 const path = require('node:path')
-const { upload } = require('./uploader')
-const { api } = require('./api-service')
+const { postProcess } = require('./uploader')
 
 const sendFile = (fileName) =>
   new Promise((resolve, reject) => {
@@ -15,9 +14,8 @@ const sendFile = (fileName) =>
 
     const outputFile = `database/${fileName}`
 
-    upload(inputFile, outputFile, fileName)
+    postProcess(inputFile, outputFile, fileName)
       .then((info) => {
-        api.post('s3-document', { file: outputFile })
         resolve(info)
       })
       .catch((err) => reject(err))
