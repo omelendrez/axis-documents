@@ -26,7 +26,7 @@ const getFileName = (name, file) => {
   return fileName
 }
 
-export const getDocumentEndpoint = (url) => {
+const getDocumentEndpoint = (url) => {
   // remove first path from 'uploads/pictures/TR526074.jpg'
   // to get 'pictures/TR526074.jpg'
 
@@ -92,5 +92,6 @@ module.exports = {
   getFileName,
   urlToBuffer,
   getTodayYMD,
-  formatCertificateDate
+  formatCertificateDate,
+  getDocumentEndpoint
 }
