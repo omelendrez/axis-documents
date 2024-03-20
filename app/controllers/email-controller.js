@@ -2,12 +2,12 @@ const EmailService = require('../services/EmailService')
 const { log } = require('../helpers/log')
 const isValidEmail = require('../helpers/validations')
 const ErrorMonitoring = require('../errors/error-monitoring')
-const { getDocumentExists, getDocument } = require('../services/file-service')
+const { getFileExists } = require('../services/file-service')
 const {
   sendEmailHandler,
   sendErrorEmailHandler
 } = require('../services/emailHandler')
-const { urlToBuffer } = require('../helpers/converters')
+const { getDocumentEndpoint } = require('../helpers/converters')
 
 exports.sendError = async (req, res) => {
   try {
@@ -64,23 +64,21 @@ exports.sendWelcomeLetter = async (req, res) => {
 
     const filePath = `${process.env.WELCOME_LETTER_FOLDER}/${filename}`
 
-    getDocumentExists(filePath).then(() => {
-      getDocument(filePath).then(async (url) => {
-        const buffer = await urlToBuffer(url)
-        const email = {
-          to,
-          subject: 'COURSE JOINING INSTRUCTIONS',
-          html: body,
-          attachments: [
-            {
-              filename,
-              content: buffer
-            }
-          ]
-        }
-        await emailService.sendEmail(email)
-        res.status(200).send({ ...email, message: 'Email sent successfully!' })
-      })
+    getFileExists(filePath).then(async () => {
+      const documentUrl = getDocumentEndpoint(filePath)
+      const email = {
+        to,
+        subject: 'COURSE JOINING INSTRUCTIONS',
+        html: body,
+        attachments: [
+          {
+            filename,
+            path: documentUrl
+          }
+        ]
+      }
+      await emailService.sendEmail(email)
+      res.status(200).send({ ...email, message: 'Email sent successfully!' })
     })
   } catch (error) {
     ErrorMonitoring.sendError('email.sendWelcomeLetter', error)
