@@ -26,10 +26,24 @@ const getFileName = (name, file) => {
   return fileName
 }
 
+export const getDocumentEndpoint = (url) => {
+  // remove first path from 'uploads/pictures/TR526074.jpg'
+  // to get 'pictures/TR526074.jpg'
+
+  let newUrl = url.split('/')
+  newUrl.shift()
+  newUrl = newUrl.join('/')
+
+  return `${process.env.THIS_URL}${newUrl}`
+}
+
 const urlToBuffer = (url) => {
   return new Promise((resolve, reject) => {
     const data = []
-    get(url, (res) => {
+
+    const endpoint = getDocumentEndpoint(url)
+
+    get(endpoint, (res) => {
       res
         .on('data', (chunk) => data.push(chunk))
         .on('end', () => resolve(Buffer.concat(data)))

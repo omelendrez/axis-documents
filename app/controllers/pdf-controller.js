@@ -117,9 +117,7 @@ exports.createIdCard = async (req, res) => {
       } catch (err) {
         sendError('pdf.createIdCard', err)
         console.log(err)
-        return res.status(err.status).json({
-          message: err.message
-        })
+        return res.status(500).json(err)
       }
     })
     .catch((err) => {
