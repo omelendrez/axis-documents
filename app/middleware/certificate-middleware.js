@@ -122,7 +122,7 @@ const generateStandardCertificate = (req) =>
           doc.text(`Expiry Date: ${expiry}`, column, row)
         }
 
-        const qrText = `${origin}/verify/${id.toString(16)}`
+        const qrText = `${origin}/verify/${parseInt(id, 10).toString(16)}`
 
         const qr = await bwipjs.toBuffer({
           bcid: 'qrcode',
@@ -296,7 +296,7 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         doc.fontSize(14)
 
-        const qrText = `${origin}/verify/${id.toString(16)}`
+        const qrText = `${origin}/verify/${parseInt(id, 10).toString(16)}`
 
         const qr = await bwipjs.toBuffer({
           bcid: 'qrcode',
