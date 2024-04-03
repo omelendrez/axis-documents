@@ -23,6 +23,8 @@ const generateStandardCertificate = (req) =>
           course
         } = req.body
 
+        const origin = req.headers.origin
+
         const { expiry_type, name: courseName } = course
 
         const backgroundImage = './templates/certificates/certificate.jpg'
@@ -106,19 +108,8 @@ const generateStandardCertificate = (req) =>
 
         doc.image(signatureImage, 60, row, { width: 80 })
 
-        row += 50
+        row += 60
 
-        // const barcode = bwipjs.toBuffer({
-        //   bcid: 'ean13',
-        //   text: file,
-        //   includetext: true,
-        //   height: 10,
-        //   textxalign: 'center' // Always good to set this
-        // })
-
-        // doc.image(barcode, 190, 610)
-
-        row += 10
         column += 270
 
         doc.fontSize(14)
@@ -131,9 +122,7 @@ const generateStandardCertificate = (req) =>
           doc.text(`Expiry Date: ${expiry}`, column, row)
         }
 
-        const qrText = `Learner: ${full_name}\nCourse: ${courseName}\nCertificate: ${certificate}\nIssued on: ${issued}\n${
-          expiry ? `Expires on: ${expiry}` : null
-        }`
+        const qrText = `${origin}/verify/${id.toString(16)}`
 
         const qr = await bwipjs.toBuffer({
           bcid: 'qrcode',
@@ -142,7 +131,6 @@ const generateStandardCertificate = (req) =>
           textxalign: 'center' // Always good to set this
         })
 
-        // doc.image(qr, 460, 730)
         doc.image(qr, 240, 610, { width: 80, height: 80 })
 
         doc.end()
@@ -169,6 +157,8 @@ const generateNimasaCertificate = async (req, profilePicture) =>
           expiry,
           course
         } = req.body
+
+        const origin = req.headers.origin
 
         const { expiry_type, name: courseName } = course
 
@@ -306,9 +296,7 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         doc.fontSize(14)
 
-        const qrText = `Learner: ${full_name}\nCourse: ${courseName}\nCertificate: ${certificate}\nIssued on: ${issued}\n${
-          expiry ? `Expires on: ${expiry}` : null
-        }`
+        const qrText = `${origin}/verify/${id.toString(16)}`
 
         const qr = await bwipjs.toBuffer({
           bcid: 'qrcode',
