@@ -16,11 +16,12 @@ const generateStandardIdCard = (req, profilePicture) =>
           badge,
           full_name,
           certificate,
-          issued,
           expiry,
           user: { full_name: fullName },
           course: { name: courseName, front_id_text, back_id_text }
         } = req.body
+
+        const origin = req.headers.origin
 
         // const profilePicture = `${process.env.PICTURE_FOLDER}/${badge}.jpg`
 
@@ -124,9 +125,7 @@ const generateStandardIdCard = (req, profilePicture) =>
           })
           .image(signatureImage, 40, 120, { width: 48 })
 
-        const qrText = `Learner: ${full_name}\nCourse: ${courseName}\nCertificate: ${certificate}\nIssued on: ${issued}\n${
-          expiry ? `Expires on: ${expiry}` : null
-        }`
+        const qrText = `${origin}/verify/${id.toString(16)}`
 
         const qr = await bwipjs.toBuffer({
           bcid: 'qrcode',
