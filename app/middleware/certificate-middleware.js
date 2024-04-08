@@ -2,11 +2,7 @@ const fs = require('node:fs')
 const PDFDocument = require('pdfkit')
 const bwipjs = require('bwip-js')
 
-const {
-  documentNumber,
-  urlToBuffer,
-  formatCertificateDate
-} = require('../helpers/converters')
+const { documentNumber, urlToBuffer } = require('../helpers/converters')
 
 const generateStandardCertificate = (req) =>
   new Promise((resolve, reject) =>
@@ -200,9 +196,11 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         row += 20
 
+        console.log(expiry)
+
         if (parseInt(expiry_type, 10) !== 0) {
           doc.fontSize(11)
-          doc.text(`Expiry Date: ${formatCertificateDate(expiry)}`, column, row)
+          doc.text(`Expiry Date: ${expiry}`, column, row)
           doc.fontSize(12)
         }
 
@@ -231,7 +229,7 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         doc.font('Times-Bold')
         doc.fontSize(16)
-        doc.text(formatCertificateDate(birth_date))
+        doc.text(birth_date)
         doc.font('Times-Roman')
 
         row += 30
@@ -286,7 +284,7 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         doc.image('./test.jpg', 400, 600, { width: 130 })
 
-        doc.text(formatCertificateDate(issued), 400, 700, {
+        doc.text(issued, 400, 700, {
           width: 130,
           align: 'center'
         })
