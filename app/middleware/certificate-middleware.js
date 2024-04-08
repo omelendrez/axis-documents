@@ -196,8 +196,6 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         row += 20
 
-        console.log(expiry)
-
         if (parseInt(expiry_type, 10) !== 0) {
           doc.fontSize(11)
           doc.text(`Expiry Date: ${expiry}`, column, row)
