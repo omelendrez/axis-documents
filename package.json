@@ -8,8 +8,8 @@
     "url": "https://github.com/omelendrez/axis-assets.git"
   },
   "engines": {
-    "node": ">=14.21.3 <=20.9.0",
-    "npm": ">=6.14.18 <=10.1.0"
+    "node": "18.x",
+    "npm": "9.x"
   },
   "scripts": {
     "dev": "node --watch app/",
