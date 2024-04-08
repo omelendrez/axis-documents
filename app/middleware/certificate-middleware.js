@@ -246,13 +246,15 @@ const generateNimasaCertificate = async (req, profilePicture) =>
 
         row += 30
 
-        doc.fontSize(12)
+        doc.fontSize(11)
         doc.font('Courier-Bold')
 
         for (const i of items) {
           doc.text(i.name, column, row, { align: 'center' })
-          row += 30
+          row += 20
         }
+
+        row += 10
 
         doc.font('Times-Roman')
 
@@ -309,6 +311,8 @@ const generateNimasaCertificate = async (req, profilePicture) =>
         doc.image(qr, 250, 580, { width: 80 })
 
         doc.end()
+
+        fs.unlink('./test.jpg', () => {})
 
         writeStream.on('finish', () => resolve(doc))
       } catch (error) {
