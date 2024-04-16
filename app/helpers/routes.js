@@ -42,11 +42,31 @@ function split(thing) {
   }
 }
 
-function listEndpoints(app, filter = '') {
-  app._router.stack.forEach(print.bind(null, []))
+const handleSort = (a, b) => {
+  if (`${a.method}${a.path}` < `${b.method}${b.path}`) {
+    return -1
+  }
+  if (`${a.method}${a.path}` == `${b.method}${b.path}`) {
+    return 0
+  }
+
+  return `${a.method}${a.path}` > `${b.method}${b.path}`
+}
+
+async function listEndpoints(app, filter = '') {
+  await app._router.stack.forEach(print.bind(null, []))
+
+  let current = routes[0].method || ''
   routes
-    .filter((r) => !filter || r.path.includes(filter))
-    .forEach((r) => console.log(r))
+    .filter((r) => !filter || r.path.includes(filter)) // Matches routes that include the filter (i.e.: 'certificates')
+    .sort(handleSort)
+    .forEach((r) => {
+      if (current !== r.method) {
+        console.log()
+        current = r.method
+      }
+      console.log(r)
+    })
 }
 
 module.exports = { listEndpoints }
