@@ -2,7 +2,7 @@ const fs = require('node:fs')
 const PDFDocument = require('pdfkit')
 const bwipjs = require('bwip-js')
 
-const { documentNumber, urlToBuffer } = require('../helpers/converters')
+const { documentNumber } = require('../helpers/converters')
 const { OPITO_HUB_URL } = require('../helpers/constants')
 
 const cardWidth = 242
@@ -73,11 +73,7 @@ const generateStandardIdCard = (req, profilePicture) =>
 
         doc.text(certificate, { width: cardWidth, height: cardHeight })
 
-        const buffer = await urlToBuffer(profilePicture)
-
-        fs.writeFileSync('./test.jpg', buffer, 'binary')
-
-        doc.image('./test.jpg', 2, 94, { width: 76 })
+        doc.image(profilePicture, 2, 94, { width: 76 })
 
         doc.addPage()
 
