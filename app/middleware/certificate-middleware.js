@@ -2,7 +2,7 @@ const fs = require('node:fs')
 const PDFDocument = require('pdfkit')
 const bwipjs = require('bwip-js')
 
-const { documentNumber, urlToBuffer } = require('../helpers/converters')
+const { documentNumber } = require('../helpers/converters')
 
 const generateStandardCertificate = (req) =>
   new Promise((resolve, reject) =>
@@ -276,18 +276,12 @@ const generateNimasaCertificate = async (req, profilePicture) =>
         row += 60
         doc.text(signatureLine, column, row)
 
-        const buffer = await urlToBuffer(profilePicture)
-
-        fs.writeFileSync('./test.jpg', buffer, 'binary')
-
-        doc.image('./test.jpg', 400, 600, { width: 130 })
+        doc.image(profilePicture, 400, 600, { width: 130 })
 
         doc.text(issued, 400, 700, {
           width: 130,
           align: 'center'
         })
-
-        // row += 110
 
         row += 10
         column += 270
