@@ -102,7 +102,9 @@ const generateStandardCertificate = (req) =>
 
         row += 60
 
-        doc.image(signatureImage, 60, row, { width: 80 })
+        if (process.env.INCLUDE_DOCUMENT_SIGNATURE == 'YES') {
+          doc.image(signatureImage, 60, row, { width: 80 })
+        }
 
         row += 60
 
