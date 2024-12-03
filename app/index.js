@@ -2,12 +2,25 @@ require('dotenv').config()
 
 const express = require('express')
 const cors = require('cors')
+const { rateLimit } = require('express-rate-limit')
+const helmet = require('helmet')
 
 const { log } = require('./helpers/log')
 const logger = require('morgan')
 const { listEndpoints } = require('./helpers/routes')
 
 const app = express()
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 1000,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false
+})
+
+app.use(limiter)
+
+app.disable('x-powered-by')
 
 app.use(cors())
 
@@ -29,6 +42,8 @@ require('./routes')(app)
 app.get('*', (req, res) => {
   res.send({ message: 'Welcome to axis-documents api 👌' })
 })
+
+app.use(helmet())
 
 const PORT = process.env.PORT || 3010
 
